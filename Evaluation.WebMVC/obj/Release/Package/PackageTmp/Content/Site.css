@@ -1,0 +1,25 @@
+﻿body {
+
+}
+
+#containerMid{
+    width:500px;
+    padding-top:50px;
+    margin-left:auto;
+    margin-right:auto;
+    height:auto;
+}
+
+@media print {
+    .non-printable, .fancybox-outer { display: none; }
+    .printable, #printDiv { 
+        display: block; 
+        font-size: 26pt;
+    }
+  }
+
+.pagebreak { page-break-before: always; }
+
+ul.list-group {
+    
+}

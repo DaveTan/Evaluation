@@ -1,0 +1,153 @@
+﻿
+@{
+    ViewBag.Title = "Employees";
+}
+
+<table class="table table-condensed">
+    <thead>
+        <tr>
+            <th>
+                <h2>@ViewBag.Title</h2>
+            </th>
+        </tr>
+    </thead>
+</table>
+
+@(Html.BootstrapTable<Evaluation.WebMVC.Models.sp_SearchEmployees_Result>(Url.Action("SearchEmployee"), TablePaginationOption.server)
+        .Apply(TableOption.showRefresh, TableOption.search)
+        .Column("is Deleted")
+        .Apply(ColumnOption.visible, false)
+        .Column("Id")
+        .Apply(ColumnOption.visible, false)
+        .Column("Action")
+        .Apply(ColumnOption.formatter, "menuFormatter")
+        .Apply(ColumnOption.width, 150)
+        .Apply(TableOption.toolbar, @"
+            <button data-toggle='modal' data-target='#Add' type='button' class='btn btn-default'>+</button>
+        ")
+        .Column("Designation Id")
+        .Apply(ColumnOption.visible, false)
+        .Column("Department Id")
+        .Apply(ColumnOption.visible, false)
+)
+
+<div id="Add" class="modal fade" role="dialog">
+    <div class="modal-dialog" style="width:400px">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal">&times;</button>
+                <h4 class="modal-title">Add</h4>
+            </div>
+            <form action="" method="post" enctype="multipart/form-data">
+                <div class="modal-body">
+                    <label for="FirstName">FirstName</label>
+                    <input class="form-control" id="FirstName" name="FirstName" onblur="checkTextField(this);">
+                    <label for="LastName">LastName</label>
+                    <input class="form-control" id="LastName" name="LastName" onblur="checkTextField(this);">
+                    <label for="Department">Department</label>
+                    <select class='form-control' id='Department' name='Department'>
+                        @Html.Raw(ViewBag.DepartmentList)
+                    </select>
+                    <label for="Designation">Designation</label>
+                    <select class='form-control' id='Designation' name='Designation'>
+                        @Html.Raw(ViewBag.DesignationList)
+                    </select>
+                </div>
+                <div class="modal-footer">
+                    <button type="submit" class="btn btn-default" id="Category" name="Add" value="Add">Submit</button>
+                    <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+<div id="Delete" class="modal fade" role="dialog">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal">&times;</button>
+                <h4 class="modal-title">Delete</h4>
+            </div>
+            <form action="" method="post" enctype="multipart/form-data">
+                <div class="modal-body">
+                    <p>Are you sure you want to delete this item?</p>
+                </div>
+                <div class="modal-footer">
+                    <a href="#" type="button" class="btn btn-default" data-dismiss="modal" onclick="Delete(currId)">Confirm</a>
+                    <button type="button" class="btn btn-default" data-dismiss="modal">Cancel</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+<div id="Edit" class="modal fade" role="dialog">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal">&times;</button>
+                <h4 class="modal-title">Edit</h4>
+            </div>
+            <form action="" method="post" enctype="multipart/form-data">
+                <div class="modal-body">
+                    <input type="hidden" id="Id" name="Id">
+                    <label for="FirstName">FirstName</label>
+                    <input class="form-control" id="FirstNameEdit" name="FirstNameEdit" onblur="checkTextField(this);">
+                    <label for="LastName">LastName</label>
+                    <input class="form-control" id="LastNameEdit" name="LastNameEdit" onblur="checkTextField(this);">
+                    <label for="Department">Department</label>
+                    <select class='form-control' id='DepartmentEdit' name='DepartmentEdit'>
+                        @Html.Raw(ViewBag.DepartmentList)
+                    </select>
+                    <label for="Designation">Designation</label>
+                    <select class='form-control' id='DesignationEdit' name='DesignationEdit'>
+                        @Html.Raw(ViewBag.DesignationList)
+                    </select>
+                </div>
+                <div class="modal-footer">
+                    <button type='submit' class='btn btn-default' name='EditDesignation' id='EditDesignation' value='EditAcc'>Confirm</button>
+            </form>
+            <button type="button" class="btn btn-default" data-dismiss="modal">Cancel</button>
+        </div>
+        </form>
+    </div>
+</div>
+
+<script>
+    var currId;
+    var currData;
+    function menuFormatter(value, row, index) {
+        return [
+            "<button data-toggle='modal' data-target='#Edit'  type='button' class='btn btn-link' value='" + JSON.stringify(row) + "'  onclick='updateEdit(value)'>Edit</button>",
+            "<button data-toggle='modal' data-target='#Delete'  type='button' class='btn btn-link' value='"+row["Id"]+"'  onclick='updateId(value)'>Delete</button>"
+        ].join(' ').replace(/%7B0%7D/g, row["Id"]);
+    }
+    function updateId(id) {
+        currId = id;
+    }
+    function updateEdit(data) {
+        temp = JSON.parse(data);
+        var HtmlElement = document.getElementById('Id');
+        HtmlElement.value = temp["Id"];
+        var HtmlElement = document.getElementById('FirstNameEdit');
+        HtmlElement.value = temp["FirstName"];
+        var HtmlElement = document.getElementById('LastNameEdit');
+        HtmlElement.value = temp["LastName"];
+        var HtmlElement = document.getElementById('DepartmentEdit');
+        for (var i = 0; i < HtmlElement.options.length; i++) {
+            if (HtmlElement.options[i].value == temp['DepartmentId']) {
+                HtmlElement.options[i].selected = true;
+            }
+        }
+        var HtmlElement = document.getElementById('DesignationEdit');
+        for (var i = 0; i < HtmlElement.options.length; i++) {
+            if (HtmlElement.options[i].value == temp['DesignationId']) {
+                HtmlElement.options[i].selected = true;
+            }
+        }
+    }
+    function Delete(id) {
+        window.location = "DeleteEmployees/" + id;
+    }
+</script>

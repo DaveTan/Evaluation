@@ -1,0 +1,319 @@
+﻿
+@{
+    ViewBag.Title = "Competencies";
+}
+<div id="Warning" style="color:red"></div>
+
+<table class="table table-condensed">
+    <thead>
+        <tr>
+            <th>
+                <h2>Categories</h2>
+            </th>
+        </tr>
+    </thead>
+</table>
+
+@(Html.BootstrapTable<Evaluation.WebMVC.Models.sp_SearchCompetencyCat_Result>(Url.Action("SearchCompetencyCat"), TablePaginationOption.server)
+        .Apply(TableOption.showRefresh, TableOption.search)
+        .Column("is Deleted")
+        .Apply(ColumnOption.visible, false)
+        .Column("Id")
+        .Apply(ColumnOption.visible, false)
+        .Column("Weighted Score")
+        .Apply(ColumnOption.formatter, "addPercent")
+        .Column("Action")
+        .Apply(ColumnOption.formatter, "menuFormatter")
+        .Apply(ColumnOption.width, 300)
+        .Apply(TableOption.toolbar, @"
+            <button data-toggle='modal' data-target='#Add' type='button' class='btn btn-default'>+</button>
+        ")
+        .Column("Weighted Score")
+        .Apply(ColumnOption.width, 150)
+)
+
+<div id="CategoryDiv" style="">
+    <table class="table table-condensed">
+        <tr>
+            <th>
+                Total:
+            </th>
+            <th>
+                <div style="float:right">@ViewBag.TotalCat</div>
+            </th>
+        </tr>
+    </table>
+</div>
+
+
+<table class="table table-condensed">
+    <thead>
+        <tr>
+            <th>
+                <h2>Fields</h2>
+            </th>
+        </tr>
+    </thead>
+</table>
+
+    @(Html.BootstrapTable<Evaluation.WebMVC.Models.sp_SearchCoreCompetency_Result>(Url.Action("SearchCoreCompetency"), TablePaginationOption.server)
+        .Apply(TableOption.showRefresh, TableOption.search)
+        .Column("is Deleted")
+        .Apply(ColumnOption.visible, false)
+        .Column("Id")
+        .Apply(ColumnOption.visible, false)
+        .Column("Weight")
+        .Apply(ColumnOption.formatter, "addPercent2")
+        .Apply(ColumnOption.width, 20)
+        .Column("Action")
+        .Apply(ColumnOption.formatter, "menuFormatter2")
+        .Apply(ColumnOption.width, 140)
+        .Apply(TableOption.toolbar, @"
+            <button data-toggle='modal' data-target='#AddCompetency' type='button' class='btn btn-default'>+</button>
+        ")
+        .Column("Competency Cat Id")
+        .Apply(ColumnOption.visible, false)
+        .Column("Question String")
+        .Apply(ColumnOption.formatter, "questionFormatter")
+        .Column("Name")
+        .Apply(ColumnOption.visible, false)
+    )
+
+<div id="CompetencyDiv" style="">
+    <table class="table table-condensed">
+        <tr>
+            <th>
+                Total:
+            </th>
+            <th>
+                <div style="float:right">@ViewBag.TotalCompetency</div>
+            </th>
+        </tr>
+    </table>
+</div>
+
+    <div id="AddCompetency" class="modal fade" role="dialog">
+        <div class="modal-dialog" style="width:800px">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal">&times;</button>
+                    <h4 class="modal-title">Add</h4>
+                </div>
+                <form action="" method="post" enctype="multipart/form-data">
+                    <div class="modal-body">
+                        <label for="Name">Name</label>
+                        <input class="form-control" id="Name" name="Name" onblur="checkTextField(this);">
+                        <label for="Name">Weight</label>
+                        <input class="form-control" id="Weight" type="number" min="1" max="100" name="Weight">
+                        <label for="Question">Question</label>
+                        <textarea class="form-control" id="Question" name="Question" onblur="checkTextField(this);" rows="5"></textarea>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="submit" class="btn btn-default" id="AddCompetency" name="AddCompetency" value="Add">Submit</button>
+                        <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <div id="Edit2" class="modal fade" role="dialog">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal">&times;</button>
+                    <h4 class="modal-title">Edit</h4>
+                </div>
+                <form action="" method="post" enctype="multipart/form-data">
+                    <div class="modal-body">
+                        <form action='' method='post' enctype='multipart/form-data'>
+                            <input type="hidden" id="Id2" name="Id2">
+                            <label for="NameEdit">Name</label>
+                            <label for="NameEdit2">Name</label>
+                            <input class="form-control" id="NameEdit2" name="NameEdit" onblur="checkTextField(this);">
+                            <label for="WeightEdit">Weight</label>
+                            <input class="form-control" id="WeightEdit" type="number" min="1" max="100" name="WeightEdit">
+                            <label for="QuestionEdit">Question</label>
+                            <textarea class="form-control" id="QuestionEdit" name="QuestionEdit" onblur="checkTextField(this);" rows="5"></textarea>
+                    </div>
+                    <div class="modal-footer">
+                        <button type='submit' class='btn btn-default' name='EditCompetency' id='EditCompetency' value='EditCompetency'>Confirm</button>
+                        <button type="button" class="btn btn-default" data-dismiss="modal">Cancel</button>
+                    </div>
+                </form>
+            </div>
+            </form>
+        </div>
+    </div>
+
+
+    <div id="Add" class="modal fade" role="dialog">
+        <div class="modal-dialog" style="width:400px">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal">&times;</button>
+                    <h4 class="modal-title">Add</h4>
+                </div>
+                <form action="" method="post" enctype="multipart/form-data">
+                    <div class="modal-body">
+                        <label for="Name">Name</label>
+                        <input class="form-control" id="Name" name="Name" onblur="checkTextField(this);">
+                        <label for="Name">Weighted Score</label>
+                        <input class="form-control" id="Score" type="number" min="1" max="100" name="Score">
+                    </div>
+                    <div class="modal-footer">
+                        <button type="submit" class="btn btn-default" id="CategoryCat" name="AddCat" value="Add">Submit</button>
+                        <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <div id="Edit" class="modal fade" role="dialog">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal">&times;</button>
+                    <h4 class="modal-title">Edit</h4>
+                </div>
+                <form action="" method="post" enctype="multipart/form-data">
+                    <div class="modal-body">
+                        <form action='' method='post' enctype='multipart/form-data'>
+                            <input type="hidden" id="Id" name="Id">
+                            <label for="NameEdit">Name</label>
+                            <input class="form-control" id="NameEdit" name="NameEdit" onblur="checkTextField(this);">
+                            <label for="ScoreEdit">Weighted Score</label>
+                            <input class="form-control" id="ScoreEdit" type="number" min="1" max="100" name="ScoreEdit">
+                    </div>
+                    <div class="modal-footer">
+                        <button type='submit' class='btn btn-default' name='EditCategory' id='EditCategory' value='EditCategory'>Confirm</button>
+                        <button type="button" class="btn btn-default" data-dismiss="modal">Cancel</button>
+                    </div>
+                </form>
+            </div>
+            </form>
+        </div>
+    </div>
+
+    <div id="Delete" class="modal fade" role="dialog">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal">&times;</button>
+                    <h4 class="modal-title">Delete</h4>
+                </div>
+                <form action="" method="post" enctype="multipart/form-data">
+                    <div class="modal-body">
+                        <p>Are you sure you want to delete this item?</p>
+                    </div>
+                    <div class="modal-footer">
+                        <a href="#" type="button" class="btn btn-default" data-dismiss="modal" onclick="Delete(currId)">Confirm</a>
+                        <button type="button" class="btn btn-default" data-dismiss="modal">Cancel</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <div id="Delete2" class="modal fade" role="dialog">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal">&times;</button>
+                    <h4 class="modal-title">Delete</h4>
+                </div>
+                <form action="" method="post" enctype="multipart/form-data">
+                    <div class="modal-body">
+                        <p>Are you sure you want to delete this item?</p>
+                    </div>
+                    <div class="modal-footer">
+                        <a href="#" type="button" class="btn btn-default" data-dismiss="modal" onclick="Delete2(currId)">Confirm</a>
+                        <button type="button" class="btn btn-default" data-dismiss="modal">Cancel</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+
+
+
+    <script>
+        var currId;
+        var currData;
+        function addPercent(value, row, index) {
+            return [
+                row["WeightedScore"] + "%"
+            ].join(' ').replace(/%7B0%7D/g, row["Id"]);
+        }
+        function addPercent2(value, row, index) {
+            return [
+                row["Weight"] + "%"
+            ].join(' ').replace(/%7B0%7D/g, row["Id"]);
+        }
+        function questionFormatter(value, row, index) {
+            return [
+                "<strong><u>" + row["Name"] + "</strong></u><br/>" +
+                row["QuestionString"].replace(/(?:\r\n|\r|\n)/g, "<br/>")
+            ].join(' ').replace(/%7B0%7D/g, row["Id"]);
+        }
+        function menuFormatter(value, row, index) {
+            return [
+                "<button type='button' class='btn btn-link' value='" + row["Id"] + "'  onclick='updateField(value)'>Show Fields</button>",
+                "<button data-toggle='modal' data-target='#Edit'  type='button' class='btn btn-link' value='" + JSON.stringify(row) + "'  onclick='updateEdit(value)'>Edit</button>",
+                "<button data-toggle='modal' data-target='#Delete'  type='button' class='btn btn-link' value='" + row["Id"] + "'  onclick='updateId(value)'>Delete</button>"
+            ].join(' ').replace(/%7B0%7D/g, row["Id"]);
+        }
+        function menuFormatter2(value, row, index) {
+            return [
+                "<button data-toggle='modal' data-target='#Edit2'  type='button' class='btn btn-link' value='" + JSON.stringify(row) + "'  onclick='updateEdit2(value)'>Edit</button>",
+                "<button data-toggle='modal' data-target='#Delete2'  type='button' class='btn btn-link' value='" + row["Id"] + "'  onclick='updateId(value)'>Delete</button>"
+            ].join(' ').replace(/%7B0%7D/g, row["Id"]);
+        }
+        function updateId(id) {
+            currId = id;
+        }
+        function updateEdit(data) {
+            temp = JSON.parse(data);
+            var HtmlElement = document.getElementById('ScoreEdit');
+            HtmlElement.value = temp["WeightedScore"];
+            var HtmlElement = document.getElementById('NameEdit');
+            HtmlElement.value = temp["Name"];
+            var HtmlElement = document.getElementById('Id');
+            HtmlElement.value = temp["Id"];
+        }
+        function updateEdit2(data) {
+            temp = JSON.parse(data);
+            var HtmlElement = document.getElementById('WeightEdit');
+            HtmlElement.value = temp["Weight"];
+            var HtmlElement = document.getElementById('NameEdit2');
+            HtmlElement.value = temp["Name"];
+            var HtmlElement = document.getElementById('Id2');
+            HtmlElement.value = temp["Id"];
+            var HtmlElement = document.getElementById('QuestionEdit');
+            HtmlElement.value = temp["QuestionString"];
+        }
+        function updateField(id) {
+            window.location = "UpdateFields/" + id;
+        }
+        function Delete(id) {
+            window.location = "DeleteCategory/" + id;
+        }
+        function Delete2(id) {
+            window.location = "DeleteCompetency/" + id;
+        } 
+        var TotalCompetency = "@ViewBag.TotalCompetency";
+        var TotalCat = "@ViewBag.TotalCat";
+        var warnMessage = '';
+        if (TotalCompetency.replace('%', '') != 100) {
+            var Id = $('#' + 'CompetencyDiv');
+            Id.css('border', '1px solid red');
+            warnMessage += '*Warning Competency Field is not equal to 100%\n<br/>';
+        }
+        if (TotalCat.replace('%', '') != 100) {
+            var Id = $('#' + 'CategoryDiv');
+            Id.css('border', '1px solid red');
+            warnMessage += '*Category Field is not equal to 100%';
+        }
+        document.getElementById("Warning").innerHTML = warnMessage;
+    </script>

@@ -1,0 +1,1234 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<edmx:Edmx Version="3.0" xmlns:edmx="http://schemas.microsoft.com/ado/2009/11/edmx">
+  <!-- EF Runtime content -->
+  <edmx:Runtime>
+    <!-- SSDL content -->
+    <edmx:StorageModels>
+      <Schema Namespace="EmployeeEvaluationModel.Store" Provider="System.Data.SqlClient" ProviderManifestToken="2008" Alias="Self" xmlns:store="http://schemas.microsoft.com/ado/2007/12/edm/EntityStoreSchemaGenerator" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm/ssdl">
+        <EntityType Name="Accounts">
+          <Key>
+            <PropertyRef Name="ID" />
+          </Key>
+          <Property Name="ID" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="Username" Type="varchar" MaxLength="50" />
+          <Property Name="Password" Type="varchar" MaxLength="50" />
+          <Property Name="Email" Type="varchar" MaxLength="50" />
+          <Property Name="isDeleted" Type="bit" />
+        </EntityType>
+        <EntityType Name="CompetencyCat">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="Name" Type="varchar" MaxLength="50" />
+          <Property Name="WeightedScore" Type="int" />
+          <Property Name="isDeleted" Type="bit" />
+        </EntityType>
+        <EntityType Name="CoreCompetency">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="Name" Type="varchar" MaxLength="50" />
+          <Property Name="QuestionString" Type="varchar(max)" />
+          <Property Name="Weight" Type="int" />
+          <Property Name="CompetencyCatId" Type="int" />
+          <Property Name="isDeleted" Type="bit" />
+        </EntityType>
+        <EntityType Name="Department">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="Name" Type="varchar" MaxLength="50" />
+          <Property Name="isDeleted" Type="bit" />
+        </EntityType>
+        <EntityType Name="Designation">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="Name" Type="varchar" MaxLength="50" />
+          <Property Name="isDeleted" Type="bit" />
+        </EntityType>
+        <EntityType Name="Employees">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="FirstName" Type="varchar" MaxLength="50" />
+          <Property Name="LastName" Type="varchar" MaxLength="50" />
+          <Property Name="DesignationId" Type="int" />
+          <Property Name="DepartmentId" Type="int" />
+          <Property Name="isDeleted" Type="bit" />
+        </EntityType>
+        <EntityType Name="EvalHeader">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="Quarter" Type="int" />
+          <Property Name="Year" Type="int" />
+          <Property Name="EmployeeId" Type="int" />
+          <Property Name="AccountId" Type="int" />
+          <Property Name="isDeleted" Type="bit" />
+          <Property Name="isConfirmed" Type="bit" />
+          <Property Name="AreaToImprove" Type="varchar(max)" />
+          <Property Name="Comment" Type="varchar(max)" />
+        </EntityType>
+        <EntityType Name="EvalItem">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="CoreCompetencyId" Type="int" />
+          <Property Name="Score" Type="int" />
+          <Property Name="EvalHeaderId" Type="int" />
+        </EntityType>
+        <EntityType Name="sysdiagrams">
+          <Key>
+            <PropertyRef Name="diagram_id" />
+          </Key>
+          <Property Name="name" Type="nvarchar" MaxLength="128" Nullable="false" />
+          <Property Name="principal_id" Type="int" Nullable="false" />
+          <Property Name="diagram_id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="version" Type="int" />
+          <Property Name="definition" Type="varbinary(max)" />
+        </EntityType>
+        <Association Name="FK_CoreCompetency_CompetencyCat">
+          <End Role="CompetencyCat" Type="Self.CompetencyCat" Multiplicity="0..1" />
+          <End Role="CoreCompetency" Type="Self.CoreCompetency" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="CompetencyCat">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="CoreCompetency">
+              <PropertyRef Name="CompetencyCatId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_Employees_Department">
+          <End Role="Department" Type="Self.Department" Multiplicity="0..1" />
+          <End Role="Employees" Type="Self.Employees" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Department">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="Employees">
+              <PropertyRef Name="DepartmentId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_Employees_Designation">
+          <End Role="Designation" Type="Self.Designation" Multiplicity="0..1" />
+          <End Role="Employees" Type="Self.Employees" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Designation">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="Employees">
+              <PropertyRef Name="DesignationId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_EvalHeader_Accounts">
+          <End Role="Accounts" Type="Self.Accounts" Multiplicity="0..1" />
+          <End Role="EvalHeader" Type="Self.EvalHeader" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Accounts">
+              <PropertyRef Name="ID" />
+            </Principal>
+            <Dependent Role="EvalHeader">
+              <PropertyRef Name="AccountId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_EvalHeader_Employees">
+          <End Role="Employees" Type="Self.Employees" Multiplicity="0..1" />
+          <End Role="EvalHeader" Type="Self.EvalHeader" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Employees">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="EvalHeader">
+              <PropertyRef Name="EmployeeId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_EvalItem_EvalHeader">
+          <End Role="EvalHeader" Type="Self.EvalHeader" Multiplicity="0..1" />
+          <End Role="EvalItem" Type="Self.EvalItem" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="EvalHeader">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="EvalItem">
+              <PropertyRef Name="EvalHeaderId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_EvalItem_EvalHeader1">
+          <End Role="EvalHeader" Type="Self.EvalHeader" Multiplicity="0..1">
+            <OnDelete Action="Cascade" />
+          </End>
+          <End Role="EvalItem" Type="Self.EvalItem" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="EvalHeader">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="EvalItem">
+              <PropertyRef Name="EvalHeaderId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Function Name="fn_diagramobjects" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="true" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo" ReturnType="int" />
+        <Function Name="GetItemScore" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="true" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo" ReturnType="int">
+          <Parameter Name="Year" Type="int" Mode="In" />
+          <Parameter Name="EmployeeId" Type="int" Mode="In" />
+          <Parameter Name="Quarter" Type="int" Mode="In" />
+          <Parameter Name="CoreId" Type="int" Mode="In" />
+        </Function>
+        <Function Name="GetName" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="true" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo" ReturnType="varchar">
+          <Parameter Name="EmployeeId" Type="int" Mode="In" />
+        </Function>
+        <Function Name="GetScore" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="true" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo" ReturnType="float">
+          <Parameter Name="Year" Type="int" Mode="In" />
+          <Parameter Name="EmployeeId" Type="int" Mode="In" />
+          <Parameter Name="Quarter" Type="int" Mode="In" />
+        </Function>
+        <Function Name="GetWeight" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="true" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo" ReturnType="float">
+          <Parameter Name="CompetencyId" Type="int" Mode="In" />
+        </Function>
+        <Function Name="sp_AddAccounts" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
+          <Parameter Name="Username" Type="varchar" Mode="In" />
+          <Parameter Name="Password" Type="varchar" Mode="In" />
+          <Parameter Name="Email" Type="varchar" Mode="In" />
+        </Function>
+        <Function Name="sp_AddCompetencyCat" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
+          <Parameter Name="Name" Type="varchar" Mode="In" />
+          <Parameter Name="WeightedScore" Type="int" Mode="In" />
+        </Function>
+        <Function Name="sp_AddCoreCompetency" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
+          <Parameter Name="Name" Type="varchar" Mode="In" />
+          <Parameter Name="QuestionString" Type="varchar(max)" Mode="In" />
+          <Parameter Name="Weight" Type="int" Mode="In" />
+          <Parameter Name="CompetenctCatId" Type="int" Mode="In" />
+        </Function>
+        <Function Name="sp_AddDepartment" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
+          <Parameter Name="Name" Type="varchar" Mode="In" />
+        </Function>
+        <Function Name="sp_AddDesignation" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
+          <Parameter Name="Name" Type="varchar" Mode="In" />
+        </Function>
+        <Function Name="sp_AddEmployees" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
+          <Parameter Name="FirstName" Type="varchar" Mode="In" />
+          <Parameter Name="LastName" Type="varchar" Mode="In" />
+          <Parameter Name="DepartmentId" Type="int" Mode="In" />
+          <Parameter Name="DesignationId" Type="int" Mode="In" />
+        </Function>
+        <Function Name="sp_AddEvalHeader" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
+          <Parameter Name="Quarter" Type="int" Mode="In" />
+          <Parameter Name="Year" Type="int" Mode="In" />
+          <Parameter Name="EmployeeId" Type="int" Mode="In" />
+          <Parameter Name="AccountId" Type="int" Mode="In" />
+          <Parameter Name="isConfirmed" Type="bit" Mode="In" />
+          <Parameter Name="AreaToImprove" Type="varchar(max)" Mode="In" />
+          <Parameter Name="Comment" Type="varchar(max)" Mode="In" />
+        </Function>
+        <Function Name="sp_AddEvalItem" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
+          <Parameter Name="CoreCompetencyId" Type="int" Mode="In" />
+          <Parameter Name="Score" Type="int" Mode="In" />
+          <Parameter Name="EvalHeaderId" Type="int" Mode="In" />
+        </Function>
+        <Function Name="sp_alterdiagram" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
+          <Parameter Name="diagramname" Type="nvarchar" Mode="In" />
+          <Parameter Name="owner_id" Type="int" Mode="In" />
+          <Parameter Name="version" Type="int" Mode="In" />
+          <Parameter Name="definition" Type="varbinary(max)" Mode="In" />
+        </Function>
+        <Function Name="sp_creatediagram" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
+          <Parameter Name="diagramname" Type="nvarchar" Mode="In" />
+          <Parameter Name="owner_id" Type="int" Mode="In" />
+          <Parameter Name="version" Type="int" Mode="In" />
+          <Parameter Name="definition" Type="varbinary(max)" Mode="In" />
+        </Function>
+        <Function Name="sp_DeleteAccounts" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
+          <Parameter Name="Id" Type="int" Mode="In" />
+        </Function>
+        <Function Name="sp_DeleteCompetencyCat" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
+          <Parameter Name="Id" Type="int" Mode="In" />
+        </Function>
+        <Function Name="sp_DeleteCoreCompetency" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
+          <Parameter Name="Id" Type="int" Mode="In" />
+        </Function>
+        <Function Name="sp_DeleteDepartment" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
+          <Parameter Name="Id" Type="int" Mode="In" />
+        </Function>
+        <Function Name="sp_DeleteDesignation" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
+          <Parameter Name="Id" Type="int" Mode="In" />
+        </Function>
+        <Function Name="sp_DeleteEmployees" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
+          <Parameter Name="Id" Type="int" Mode="In" />
+        </Function>
+        <Function Name="sp_dropdiagram" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
+          <Parameter Name="diagramname" Type="nvarchar" Mode="In" />
+          <Parameter Name="owner_id" Type="int" Mode="In" />
+        </Function>
+        <Function Name="sp_EditAccounts" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
+          <Parameter Name="Id" Type="int" Mode="In" />
+          <Parameter Name="Username" Type="varchar" Mode="In" />
+          <Parameter Name="Password" Type="varchar" Mode="In" />
+          <Parameter Name="Email" Type="varchar" Mode="In" />
+        </Function>
+        <Function Name="sp_EditCompetencyCat" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
+          <Parameter Name="Id" Type="int" Mode="In" />
+          <Parameter Name="Name" Type="varchar" Mode="In" />
+          <Parameter Name="WeightedScore" Type="int" Mode="In" />
+        </Function>
+        <Function Name="sp_EditCoreCompetency" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
+          <Parameter Name="Id" Type="int" Mode="In" />
+          <Parameter Name="Name" Type="varchar" Mode="In" />
+          <Parameter Name="QuestionString" Type="varchar(max)" Mode="In" />
+          <Parameter Name="Weight" Type="int" Mode="In" />
+        </Function>
+        <Function Name="sp_EditDepartment" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
+          <Parameter Name="Id" Type="int" Mode="In" />
+          <Parameter Name="Name" Type="varchar" Mode="In" />
+        </Function>
+        <Function Name="sp_EditDesignation" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
+          <Parameter Name="Id" Type="int" Mode="In" />
+          <Parameter Name="Name" Type="varchar" Mode="In" />
+        </Function>
+        <Function Name="sp_EditEmployees" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
+          <Parameter Name="Id" Type="int" Mode="In" />
+          <Parameter Name="FirstName" Type="varchar" Mode="In" />
+          <Parameter Name="LastName" Type="varchar" Mode="In" />
+          <Parameter Name="DepartmentId" Type="int" Mode="In" />
+          <Parameter Name="DesignationId" Type="int" Mode="In" />
+        </Function>
+        <Function Name="sp_GetEmployeeDetail" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
+          <Parameter Name="Id" Type="int" Mode="In" />
+        </Function>
+        <Function Name="sp_getForm" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
+          <Parameter Name="CatId" Type="int" Mode="In" />
+          <Parameter Name="Year" Type="int" Mode="In" />
+          <Parameter Name="Quarter" Type="int" Mode="In" />
+          <Parameter Name="EmployeeId" Type="int" Mode="In" />
+        </Function>
+        <Function Name="sp_GetHeader" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
+          <Parameter Name="EmployeeId" Type="int" Mode="In" />
+          <Parameter Name="Year" Type="int" Mode="In" />
+          <Parameter Name="Quarter" Type="int" Mode="In" />
+        </Function>
+        <Function Name="sp_GetSumCat" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo" />
+        <Function Name="sp_GetSumCompetency" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
+          <Parameter Name="Id" Type="int" Mode="In" />
+        </Function>
+        <Function Name="sp_getYearGraph" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
+          <Parameter Name="Year" Type="int" Mode="In" />
+          <Parameter Name="EmployeeId" Type="int" Mode="In" />
+        </Function>
+        <Function Name="sp_helpdiagramdefinition" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
+          <Parameter Name="diagramname" Type="nvarchar" Mode="In" />
+          <Parameter Name="owner_id" Type="int" Mode="In" />
+        </Function>
+        <Function Name="sp_helpdiagrams" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
+          <Parameter Name="diagramname" Type="nvarchar" Mode="In" />
+          <Parameter Name="owner_id" Type="int" Mode="In" />
+        </Function>
+        <Function Name="sp_renamediagram" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
+          <Parameter Name="diagramname" Type="nvarchar" Mode="In" />
+          <Parameter Name="owner_id" Type="int" Mode="In" />
+          <Parameter Name="new_diagramname" Type="nvarchar" Mode="In" />
+        </Function>
+        <Function Name="sp_SearchAccounts" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
+          <Parameter Name="Search" Type="varchar" Mode="In" />
+        </Function>
+        <Function Name="sp_SearchCompetencyCat" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
+          <Parameter Name="Search" Type="varchar" Mode="In" />
+        </Function>
+        <Function Name="sp_SearchCoreCompetency" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
+          <Parameter Name="Search" Type="varchar" Mode="In" />
+          <Parameter Name="CatId" Type="int" Mode="In" />
+        </Function>
+        <Function Name="sp_SearchDepartment" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
+          <Parameter Name="Search" Type="varchar" Mode="In" />
+        </Function>
+        <Function Name="sp_SearchDesignation" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
+          <Parameter Name="Search" Type="varchar" Mode="In" />
+        </Function>
+        <Function Name="sp_SearchEmployees" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
+          <Parameter Name="Search" Type="varchar" Mode="In" />
+        </Function>
+        <Function Name="sp_SearchQuarters" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
+          <Parameter Name="Search" Type="varchar" Mode="In" />
+          <Parameter Name="Year" Type="int" Mode="In" />
+          <Parameter Name="Quarter" Type="int" Mode="In" />
+          <Parameter Name="DeparmentId" Type="int" Mode="In" />
+        </Function>
+        <Function Name="sp_upgraddiagrams" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo" />
+        <Function Name="sp_ValidateLogin" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
+          <Parameter Name="Username" Type="varchar" Mode="In" />
+          <Parameter Name="Password" Type="varchar" Mode="In" />
+        </Function>
+        <EntityContainer Name="EmployeeEvaluationModelStoreContainer">
+          <EntitySet Name="Accounts" EntityType="Self.Accounts" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="CompetencyCat" EntityType="Self.CompetencyCat" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="CoreCompetency" EntityType="Self.CoreCompetency" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="Department" EntityType="Self.Department" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="Designation" EntityType="Self.Designation" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="Employees" EntityType="Self.Employees" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="EvalHeader" EntityType="Self.EvalHeader" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="EvalItem" EntityType="Self.EvalItem" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="sysdiagrams" EntityType="Self.sysdiagrams" Schema="dbo" store:Type="Tables" />
+          <AssociationSet Name="FK_CoreCompetency_CompetencyCat" Association="Self.FK_CoreCompetency_CompetencyCat">
+            <End Role="CompetencyCat" EntitySet="CompetencyCat" />
+            <End Role="CoreCompetency" EntitySet="CoreCompetency" />
+          </AssociationSet>
+          <AssociationSet Name="FK_Employees_Department" Association="Self.FK_Employees_Department">
+            <End Role="Department" EntitySet="Department" />
+            <End Role="Employees" EntitySet="Employees" />
+          </AssociationSet>
+          <AssociationSet Name="FK_Employees_Designation" Association="Self.FK_Employees_Designation">
+            <End Role="Designation" EntitySet="Designation" />
+            <End Role="Employees" EntitySet="Employees" />
+          </AssociationSet>
+          <AssociationSet Name="FK_EvalHeader_Accounts" Association="Self.FK_EvalHeader_Accounts">
+            <End Role="Accounts" EntitySet="Accounts" />
+            <End Role="EvalHeader" EntitySet="EvalHeader" />
+          </AssociationSet>
+          <AssociationSet Name="FK_EvalHeader_Employees" Association="Self.FK_EvalHeader_Employees">
+            <End Role="Employees" EntitySet="Employees" />
+            <End Role="EvalHeader" EntitySet="EvalHeader" />
+          </AssociationSet>
+          <AssociationSet Name="FK_EvalItem_EvalHeader" Association="Self.FK_EvalItem_EvalHeader">
+            <End Role="EvalHeader" EntitySet="EvalHeader" />
+            <End Role="EvalItem" EntitySet="EvalItem" />
+          </AssociationSet>
+          <AssociationSet Name="FK_EvalItem_EvalHeader1" Association="Self.FK_EvalItem_EvalHeader1">
+            <End Role="EvalHeader" EntitySet="EvalHeader" />
+            <End Role="EvalItem" EntitySet="EvalItem" />
+          </AssociationSet>
+        </EntityContainer>
+      </Schema>
+    </edmx:StorageModels>
+    <!-- CSDL content -->
+    <edmx:ConceptualModels>
+      <Schema Namespace="EmployeeEvaluationModel" Alias="Self" annotation:UseStrongSpatialTypes="false" xmlns:annotation="http://schemas.microsoft.com/ado/2009/02/edm/annotation" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm">
+        <EntityType Name="Account">
+          <Key>
+            <PropertyRef Name="ID" />
+          </Key>
+          <Property Name="ID" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="Username" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
+          <Property Name="Password" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
+          <Property Name="Email" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
+          <Property Name="isDeleted" Type="Boolean" />
+          <NavigationProperty Name="EvalHeaders" Relationship="Self.FK_EvalHeader_Accounts" FromRole="Accounts" ToRole="EvalHeader" />
+        </EntityType>
+        <EntityType Name="CompetencyCat">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="Name" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
+          <Property Name="WeightedScore" Type="Int32" />
+          <Property Name="isDeleted" Type="Boolean" />
+          <NavigationProperty Name="CoreCompetencies" Relationship="Self.FK_CoreCompetency_CompetencyCat" FromRole="CompetencyCat" ToRole="CoreCompetency" />
+        </EntityType>
+        <EntityType Name="CoreCompetency">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="Name" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
+          <Property Name="QuestionString" Type="String" MaxLength="Max" FixedLength="false" Unicode="false" />
+          <Property Name="Weight" Type="Int32" />
+          <Property Name="CompetencyCatId" Type="Int32" />
+          <Property Name="isDeleted" Type="Boolean" />
+          <NavigationProperty Name="CompetencyCat" Relationship="Self.FK_CoreCompetency_CompetencyCat" FromRole="CoreCompetency" ToRole="CompetencyCat" />
+        </EntityType>
+        <EntityType Name="Department">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="Name" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
+          <Property Name="isDeleted" Type="Boolean" />
+          <NavigationProperty Name="Employees" Relationship="Self.FK_Employees_Department" FromRole="Department" ToRole="Employees" />
+        </EntityType>
+        <EntityType Name="Designation">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="Name" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
+          <Property Name="isDeleted" Type="Boolean" />
+          <NavigationProperty Name="Employees" Relationship="Self.FK_Employees_Designation" FromRole="Designation" ToRole="Employees" />
+        </EntityType>
+        <EntityType Name="Employee">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="FirstName" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
+          <Property Name="LastName" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
+          <Property Name="DesignationId" Type="Int32" />
+          <Property Name="DepartmentId" Type="Int32" />
+          <Property Name="isDeleted" Type="Boolean" />
+          <NavigationProperty Name="Department" Relationship="Self.FK_Employees_Department" FromRole="Employees" ToRole="Department" />
+          <NavigationProperty Name="Designation" Relationship="Self.FK_Employees_Designation" FromRole="Employees" ToRole="Designation" />
+          <NavigationProperty Name="EvalHeaders" Relationship="Self.FK_EvalHeader_Employees" FromRole="Employees" ToRole="EvalHeader" />
+        </EntityType>
+        <EntityType Name="EvalHeader">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="Quarter" Type="Int32" />
+          <Property Name="Year" Type="Int32" />
+          <Property Name="EmployeeId" Type="Int32" />
+          <Property Name="AccountId" Type="Int32" />
+          <Property Name="isDeleted" Type="Boolean" />
+          <Property Name="isConfirmed" Type="Boolean" />
+          <Property Name="AreaToImprove" Type="String" MaxLength="Max" FixedLength="false" Unicode="false" />
+          <Property Name="Comment" Type="String" MaxLength="Max" FixedLength="false" Unicode="false" />
+          <NavigationProperty Name="Account" Relationship="Self.FK_EvalHeader_Accounts" FromRole="EvalHeader" ToRole="Accounts" />
+          <NavigationProperty Name="Employee" Relationship="Self.FK_EvalHeader_Employees" FromRole="EvalHeader" ToRole="Employees" />
+          <NavigationProperty Name="EvalItems" Relationship="Self.FK_EvalItem_EvalHeader" FromRole="EvalHeader" ToRole="EvalItem" />
+          <NavigationProperty Name="EvalItems1" Relationship="Self.FK_EvalItem_EvalHeader1" FromRole="EvalHeader" ToRole="EvalItem" />
+        </EntityType>
+        <EntityType Name="EvalItem">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="CoreCompetencyId" Type="Int32" />
+          <Property Name="Score" Type="Int32" />
+          <Property Name="EvalHeaderId" Type="Int32" />
+          <NavigationProperty Name="EvalHeader" Relationship="Self.FK_EvalItem_EvalHeader" FromRole="EvalItem" ToRole="EvalHeader" />
+          <NavigationProperty Name="EvalHeader1" Relationship="Self.FK_EvalItem_EvalHeader1" FromRole="EvalItem" ToRole="EvalHeader" />
+        </EntityType>
+        <EntityType Name="sysdiagram">
+          <Key>
+            <PropertyRef Name="diagram_id" />
+          </Key>
+          <Property Name="name" Type="String" MaxLength="128" FixedLength="false" Unicode="true" Nullable="false" />
+          <Property Name="principal_id" Type="Int32" Nullable="false" />
+          <Property Name="diagram_id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="version" Type="Int32" />
+          <Property Name="definition" Type="Binary" MaxLength="Max" FixedLength="false" />
+        </EntityType>
+        <Association Name="FK_EvalHeader_Accounts">
+          <End Role="Accounts" Type="Self.Account" Multiplicity="0..1" />
+          <End Role="EvalHeader" Type="Self.EvalHeader" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Accounts">
+              <PropertyRef Name="ID" />
+            </Principal>
+            <Dependent Role="EvalHeader">
+              <PropertyRef Name="AccountId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_CoreCompetency_CompetencyCat">
+          <End Role="CompetencyCat" Type="Self.CompetencyCat" Multiplicity="0..1" />
+          <End Role="CoreCompetency" Type="Self.CoreCompetency" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="CompetencyCat">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="CoreCompetency">
+              <PropertyRef Name="CompetencyCatId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_Employees_Department">
+          <End Role="Department" Type="Self.Department" Multiplicity="0..1" />
+          <End Role="Employees" Type="Self.Employee" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Department">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="Employees">
+              <PropertyRef Name="DepartmentId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_Employees_Designation">
+          <End Role="Designation" Type="Self.Designation" Multiplicity="0..1" />
+          <End Role="Employees" Type="Self.Employee" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Designation">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="Employees">
+              <PropertyRef Name="DesignationId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_EvalHeader_Employees">
+          <End Role="Employees" Type="Self.Employee" Multiplicity="0..1" />
+          <End Role="EvalHeader" Type="Self.EvalHeader" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Employees">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="EvalHeader">
+              <PropertyRef Name="EmployeeId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_EvalItem_EvalHeader">
+          <End Role="EvalHeader" Type="Self.EvalHeader" Multiplicity="0..1" />
+          <End Role="EvalItem" Type="Self.EvalItem" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="EvalHeader">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="EvalItem">
+              <PropertyRef Name="EvalHeaderId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_EvalItem_EvalHeader1">
+          <End Role="EvalHeader" Type="Self.EvalHeader" Multiplicity="0..1">
+            <OnDelete Action="Cascade" />
+          </End>
+          <End Role="EvalItem" Type="Self.EvalItem" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="EvalHeader">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="EvalItem">
+              <PropertyRef Name="EvalHeaderId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <EntityContainer Name="EmployeeEvaluationEntities" annotation:LazyLoadingEnabled="true">
+          <EntitySet Name="Accounts" EntityType="Self.Account" />
+          <EntitySet Name="CompetencyCats" EntityType="Self.CompetencyCat" />
+          <EntitySet Name="CoreCompetencies" EntityType="Self.CoreCompetency" />
+          <EntitySet Name="Departments" EntityType="Self.Department" />
+          <EntitySet Name="Designations" EntityType="Self.Designation" />
+          <EntitySet Name="Employees" EntityType="Self.Employee" />
+          <EntitySet Name="EvalHeaders" EntityType="Self.EvalHeader" />
+          <EntitySet Name="EvalItems" EntityType="Self.EvalItem" />
+          <EntitySet Name="sysdiagrams" EntityType="Self.sysdiagram" />
+          <AssociationSet Name="FK_EvalHeader_Accounts" Association="Self.FK_EvalHeader_Accounts">
+            <End Role="Accounts" EntitySet="Accounts" />
+            <End Role="EvalHeader" EntitySet="EvalHeaders" />
+          </AssociationSet>
+          <AssociationSet Name="FK_CoreCompetency_CompetencyCat" Association="Self.FK_CoreCompetency_CompetencyCat">
+            <End Role="CompetencyCat" EntitySet="CompetencyCats" />
+            <End Role="CoreCompetency" EntitySet="CoreCompetencies" />
+          </AssociationSet>
+          <AssociationSet Name="FK_Employees_Department" Association="Self.FK_Employees_Department">
+            <End Role="Department" EntitySet="Departments" />
+            <End Role="Employees" EntitySet="Employees" />
+          </AssociationSet>
+          <AssociationSet Name="FK_Employees_Designation" Association="Self.FK_Employees_Designation">
+            <End Role="Designation" EntitySet="Designations" />
+            <End Role="Employees" EntitySet="Employees" />
+          </AssociationSet>
+          <AssociationSet Name="FK_EvalHeader_Employees" Association="Self.FK_EvalHeader_Employees">
+            <End Role="Employees" EntitySet="Employees" />
+            <End Role="EvalHeader" EntitySet="EvalHeaders" />
+          </AssociationSet>
+          <AssociationSet Name="FK_EvalItem_EvalHeader" Association="Self.FK_EvalItem_EvalHeader">
+            <End Role="EvalHeader" EntitySet="EvalHeaders" />
+            <End Role="EvalItem" EntitySet="EvalItems" />
+          </AssociationSet>
+          <AssociationSet Name="FK_EvalItem_EvalHeader1" Association="Self.FK_EvalItem_EvalHeader1">
+            <End Role="EvalHeader" EntitySet="EvalHeaders" />
+            <End Role="EvalItem" EntitySet="EvalItems" />
+          </AssociationSet>
+          <FunctionImport Name="sp_AddAccounts">
+            <Parameter Name="Username" Mode="In" Type="String" />
+            <Parameter Name="Password" Mode="In" Type="String" />
+            <Parameter Name="Email" Mode="In" Type="String" />
+          </FunctionImport>
+          <FunctionImport Name="sp_AddCompetencyCat">
+            <Parameter Name="Name" Mode="In" Type="String" />
+            <Parameter Name="WeightedScore" Mode="In" Type="Int32" />
+          </FunctionImport>
+          <FunctionImport Name="sp_AddCoreCompetency">
+            <Parameter Name="Name" Mode="In" Type="String" />
+            <Parameter Name="QuestionString" Mode="In" Type="String" />
+            <Parameter Name="Weight" Mode="In" Type="Int32" />
+            <Parameter Name="CompetenctCatId" Mode="In" Type="Int32" />
+          </FunctionImport>
+          <FunctionImport Name="sp_AddDepartment">
+            <Parameter Name="Name" Mode="In" Type="String" />
+          </FunctionImport>
+          <FunctionImport Name="sp_AddDesignation">
+            <Parameter Name="Name" Mode="In" Type="String" />
+          </FunctionImport>
+          <FunctionImport Name="sp_AddEmployees">
+            <Parameter Name="FirstName" Mode="In" Type="String" />
+            <Parameter Name="LastName" Mode="In" Type="String" />
+            <Parameter Name="DepartmentId" Mode="In" Type="Int32" />
+            <Parameter Name="DesignationId" Mode="In" Type="Int32" />
+          </FunctionImport>
+          <FunctionImport Name="sp_AddEvalHeader" ReturnType="Collection(Decimal)">
+            <Parameter Name="Quarter" Mode="In" Type="Int32" />
+            <Parameter Name="Year" Mode="In" Type="Int32" />
+            <Parameter Name="EmployeeId" Mode="In" Type="Int32" />
+            <Parameter Name="AccountId" Mode="In" Type="Int32" />
+            <Parameter Name="isConfirmed" Mode="In" Type="Boolean" />
+            <Parameter Name="AreaToImprove" Mode="In" Type="String" />
+            <Parameter Name="Comment" Mode="In" Type="String" />
+          </FunctionImport>
+          <FunctionImport Name="sp_AddEvalItem">
+            <Parameter Name="CoreCompetencyId" Mode="In" Type="Int32" />
+            <Parameter Name="Score" Mode="In" Type="Int32" />
+            <Parameter Name="EvalHeaderId" Mode="In" Type="Int32" />
+          </FunctionImport>
+          <FunctionImport Name="sp_alterdiagram">
+            <Parameter Name="diagramname" Mode="In" Type="String" />
+            <Parameter Name="owner_id" Mode="In" Type="Int32" />
+            <Parameter Name="version" Mode="In" Type="Int32" />
+            <Parameter Name="definition" Mode="In" Type="Binary" />
+          </FunctionImport>
+          <FunctionImport Name="sp_creatediagram">
+            <Parameter Name="diagramname" Mode="In" Type="String" />
+            <Parameter Name="owner_id" Mode="In" Type="Int32" />
+            <Parameter Name="version" Mode="In" Type="Int32" />
+            <Parameter Name="definition" Mode="In" Type="Binary" />
+          </FunctionImport>
+          <FunctionImport Name="sp_DeleteAccounts">
+            <Parameter Name="Id" Mode="In" Type="Int32" />
+          </FunctionImport>
+          <FunctionImport Name="sp_DeleteCompetencyCat">
+            <Parameter Name="Id" Mode="In" Type="Int32" />
+          </FunctionImport>
+          <FunctionImport Name="sp_DeleteCoreCompetency">
+            <Parameter Name="Id" Mode="In" Type="Int32" />
+          </FunctionImport>
+          <FunctionImport Name="sp_DeleteDepartment">
+            <Parameter Name="Id" Mode="In" Type="Int32" />
+          </FunctionImport>
+          <FunctionImport Name="sp_DeleteDesignation">
+            <Parameter Name="Id" Mode="In" Type="Int32" />
+          </FunctionImport>
+          <FunctionImport Name="sp_DeleteEmployees">
+            <Parameter Name="Id" Mode="In" Type="Int32" />
+          </FunctionImport>
+          <FunctionImport Name="sp_dropdiagram">
+            <Parameter Name="diagramname" Mode="In" Type="String" />
+            <Parameter Name="owner_id" Mode="In" Type="Int32" />
+          </FunctionImport>
+          <FunctionImport Name="sp_EditAccounts">
+            <Parameter Name="Id" Mode="In" Type="Int32" />
+            <Parameter Name="Username" Mode="In" Type="String" />
+            <Parameter Name="Password" Mode="In" Type="String" />
+            <Parameter Name="Email" Mode="In" Type="String" />
+          </FunctionImport>
+          <FunctionImport Name="sp_EditCompetencyCat">
+            <Parameter Name="Id" Mode="In" Type="Int32" />
+            <Parameter Name="Name" Mode="In" Type="String" />
+            <Parameter Name="WeightedScore" Mode="In" Type="Int32" />
+          </FunctionImport>
+          <FunctionImport Name="sp_EditCoreCompetency">
+            <Parameter Name="Id" Mode="In" Type="Int32" />
+            <Parameter Name="Name" Mode="In" Type="String" />
+            <Parameter Name="QuestionString" Mode="In" Type="String" />
+            <Parameter Name="Weight" Mode="In" Type="Int32" />
+          </FunctionImport>
+          <FunctionImport Name="sp_EditDepartment">
+            <Parameter Name="Id" Mode="In" Type="Int32" />
+            <Parameter Name="Name" Mode="In" Type="String" />
+          </FunctionImport>
+          <FunctionImport Name="sp_EditDesignation">
+            <Parameter Name="Id" Mode="In" Type="Int32" />
+            <Parameter Name="Name" Mode="In" Type="String" />
+          </FunctionImport>
+          <FunctionImport Name="sp_EditEmployees">
+            <Parameter Name="Id" Mode="In" Type="Int32" />
+            <Parameter Name="FirstName" Mode="In" Type="String" />
+            <Parameter Name="LastName" Mode="In" Type="String" />
+            <Parameter Name="DepartmentId" Mode="In" Type="Int32" />
+            <Parameter Name="DesignationId" Mode="In" Type="Int32" />
+          </FunctionImport>
+          <FunctionImport Name="sp_GetEmployeeDetail" ReturnType="Collection(EmployeeEvaluationModel.sp_GetEmployeeDetail_Result)">
+            <Parameter Name="Id" Mode="In" Type="Int32" />
+          </FunctionImport>
+          <FunctionImport Name="sp_getForm" ReturnType="Collection(EmployeeEvaluationModel.sp_getForm_Result)">
+            <Parameter Name="CatId" Mode="In" Type="Int32" />
+            <Parameter Name="Year" Mode="In" Type="Int32" />
+            <Parameter Name="Quarter" Mode="In" Type="Int32" />
+            <Parameter Name="EmployeeId" Mode="In" Type="Int32" />
+          </FunctionImport>
+          <FunctionImport Name="sp_GetHeader" ReturnType="Collection(EmployeeEvaluationModel.sp_GetHeader_Result)">
+            <Parameter Name="EmployeeId" Mode="In" Type="Int32" />
+            <Parameter Name="Year" Mode="In" Type="Int32" />
+            <Parameter Name="Quarter" Mode="In" Type="Int32" />
+          </FunctionImport>
+          <FunctionImport Name="sp_GetSumCat" ReturnType="Collection(Int32)" />
+          <FunctionImport Name="sp_GetSumCompetency" ReturnType="Collection(Int32)">
+            <Parameter Name="Id" Mode="In" Type="Int32" />
+          </FunctionImport>
+          <FunctionImport Name="sp_getYearGraph" ReturnType="Collection(EmployeeEvaluationModel.sp_getYearGraph_Result)">
+            <Parameter Name="Year" Mode="In" Type="Int32" />
+            <Parameter Name="EmployeeId" Mode="In" Type="Int32" />
+          </FunctionImport>
+          <FunctionImport Name="sp_helpdiagramdefinition" ReturnType="Collection(EmployeeEvaluationModel.sp_helpdiagramdefinition_Result)">
+            <Parameter Name="diagramname" Mode="In" Type="String" />
+            <Parameter Name="owner_id" Mode="In" Type="Int32" />
+          </FunctionImport>
+          <FunctionImport Name="sp_helpdiagrams" ReturnType="Collection(EmployeeEvaluationModel.sp_helpdiagrams_Result)">
+            <Parameter Name="diagramname" Mode="In" Type="String" />
+            <Parameter Name="owner_id" Mode="In" Type="Int32" />
+          </FunctionImport>
+          <FunctionImport Name="sp_renamediagram">
+            <Parameter Name="diagramname" Mode="In" Type="String" />
+            <Parameter Name="owner_id" Mode="In" Type="Int32" />
+            <Parameter Name="new_diagramname" Mode="In" Type="String" />
+          </FunctionImport>
+          <FunctionImport Name="sp_SearchAccounts" ReturnType="Collection(EmployeeEvaluationModel.sp_SearchAccounts_Result)">
+            <Parameter Name="Search" Mode="In" Type="String" />
+          </FunctionImport>
+          <FunctionImport Name="sp_SearchCompetencyCat" ReturnType="Collection(EmployeeEvaluationModel.sp_SearchCompetencyCat_Result)">
+            <Parameter Name="Search" Mode="In" Type="String" />
+          </FunctionImport>
+          <FunctionImport Name="sp_SearchCoreCompetency" ReturnType="Collection(EmployeeEvaluationModel.sp_SearchCoreCompetency_Result)">
+            <Parameter Name="Search" Mode="In" Type="String" />
+            <Parameter Name="CatId" Mode="In" Type="Int32" />
+          </FunctionImport>
+          <FunctionImport Name="sp_SearchDepartment" ReturnType="Collection(EmployeeEvaluationModel.sp_SearchDepartment_Result)">
+            <Parameter Name="Search" Mode="In" Type="String" />
+          </FunctionImport>
+          <FunctionImport Name="sp_SearchDesignation" ReturnType="Collection(EmployeeEvaluationModel.sp_SearchDesignation_Result)">
+            <Parameter Name="Search" Mode="In" Type="String" />
+          </FunctionImport>
+          <FunctionImport Name="sp_SearchEmployees" ReturnType="Collection(EmployeeEvaluationModel.sp_SearchEmployees_Result)">
+            <Parameter Name="Search" Mode="In" Type="String" />
+          </FunctionImport>
+          <FunctionImport Name="sp_SearchQuarters" ReturnType="Collection(EmployeeEvaluationModel.sp_SearchQuarters_Result)">
+            <Parameter Name="Search" Mode="In" Type="String" />
+            <Parameter Name="Year" Mode="In" Type="Int32" />
+            <Parameter Name="Quarter" Mode="In" Type="Int32" />
+            <Parameter Name="DeparmentId" Mode="In" Type="Int32" />
+          </FunctionImport>
+          <FunctionImport Name="sp_upgraddiagrams" />
+          <FunctionImport Name="sp_ValidateLogin" ReturnType="Collection(EmployeeEvaluationModel.sp_ValidateLogin_Result)">
+            <Parameter Name="Username" Mode="In" Type="String" />
+            <Parameter Name="Password" Mode="In" Type="String" />
+          </FunctionImport>
+        </EntityContainer>
+        <ComplexType Name="sp_GetEmployeeDetail_Result">
+          <Property Type="Int32" Name="Id" Nullable="false" />
+          <Property Type="String" Name="FirstName" Nullable="true" MaxLength="50" />
+          <Property Type="String" Name="LastName" Nullable="true" MaxLength="50" />
+          <Property Type="Int32" Name="DesignationId" Nullable="true" />
+          <Property Type="Int32" Name="DepartmentId" Nullable="true" />
+          <Property Type="Boolean" Name="isDeleted" Nullable="true" />
+          <Property Type="String" Name="Department" Nullable="true" MaxLength="50" />
+          <Property Type="String" Name="Designation" Nullable="true" MaxLength="50" />
+        </ComplexType>
+        <ComplexType Name="sp_getForm_Result">
+          <Property Type="Int32" Name="Id" Nullable="false" />
+          <Property Type="String" Name="Name" Nullable="true" MaxLength="50" />
+          <Property Type="String" Name="QuestionString" Nullable="true" />
+          <Property Type="Int32" Name="Weight" Nullable="true" />
+          <Property Type="Int32" Name="CompetencyCatId" Nullable="true" />
+          <Property Type="Boolean" Name="isDeleted" Nullable="true" />
+          <Property Type="Int32" Name="itemScore" Nullable="true" />
+        </ComplexType>
+        <ComplexType Name="sp_GetHeader_Result">
+          <Property Type="String" Name="Comment" Nullable="true" />
+          <Property Type="String" Name="AreaToImprove" Nullable="true" />
+          <Property Type="String" Name="Username" Nullable="true" MaxLength="50" />
+        </ComplexType>
+        <ComplexType Name="sp_getYearGraph_Result">
+          <Property Type="String" Name="NAME" Nullable="true" MaxLength="50" />
+          <Property Type="Double" Name="Q1" Nullable="true" />
+          <Property Type="Double" Name="Q2" Nullable="true" />
+          <Property Type="Double" Name="Q3" Nullable="true" />
+          <Property Type="Double" Name="Q4" Nullable="true" />
+        </ComplexType>
+        <ComplexType Name="sp_helpdiagramdefinition_Result">
+          <Property Type="Int32" Name="version" Nullable="true" />
+          <Property Type="Binary" Name="definition" Nullable="true" />
+        </ComplexType>
+        <ComplexType Name="sp_helpdiagrams_Result">
+          <Property Type="String" Name="Database" Nullable="true" MaxLength="128" />
+          <Property Type="String" Name="Name" Nullable="false" MaxLength="128" />
+          <Property Type="Int32" Name="ID" Nullable="false" />
+          <Property Type="String" Name="Owner" Nullable="true" MaxLength="128" />
+          <Property Type="Int32" Name="OwnerID" Nullable="false" />
+        </ComplexType>
+        <ComplexType Name="sp_SearchAccounts_Result">
+          <Property Type="Int32" Name="ID" Nullable="false" />
+          <Property Type="String" Name="Username" Nullable="true" MaxLength="50" />
+          <Property Type="String" Name="Password" Nullable="true" MaxLength="50" />
+          <Property Type="String" Name="Email" Nullable="true" MaxLength="50" />
+          <Property Type="Boolean" Name="isDeleted" Nullable="true" />
+        </ComplexType>
+        <ComplexType Name="sp_SearchCompetencyCat_Result">
+          <Property Type="Int32" Name="Id" Nullable="false" />
+          <Property Type="String" Name="Name" Nullable="true" MaxLength="50" />
+          <Property Type="Int32" Name="WeightedScore" Nullable="true" />
+          <Property Type="Boolean" Name="isDeleted" Nullable="true" />
+        </ComplexType>
+        <ComplexType Name="sp_SearchCoreCompetency_Result">
+          <Property Type="Int32" Name="Id" Nullable="false" />
+          <Property Type="String" Name="Name" Nullable="true" MaxLength="50" />
+          <Property Type="String" Name="QuestionString" Nullable="true" />
+          <Property Type="Int32" Name="Weight" Nullable="true" />
+          <Property Type="Int32" Name="CompetencyCatId" Nullable="true" />
+          <Property Type="Boolean" Name="isDeleted" Nullable="true" />
+        </ComplexType>
+        <ComplexType Name="sp_SearchDepartment_Result">
+          <Property Type="Int32" Name="Id" Nullable="false" />
+          <Property Type="String" Name="Name" Nullable="true" MaxLength="50" />
+          <Property Type="Boolean" Name="isDeleted" Nullable="true" />
+        </ComplexType>
+        <ComplexType Name="sp_SearchDesignation_Result">
+          <Property Type="Int32" Name="Id" Nullable="false" />
+          <Property Type="String" Name="Name" Nullable="true" MaxLength="50" />
+          <Property Type="Boolean" Name="isDeleted" Nullable="true" />
+        </ComplexType>
+        <ComplexType Name="sp_SearchEmployees_Result">
+          <Property Type="Int32" Name="DepartmentId" Nullable="true" />
+          <Property Type="Int32" Name="DesignationId" Nullable="true" />
+          <Property Type="String" Name="LastName" Nullable="true" MaxLength="50" />
+          <Property Type="String" Name="FirstName" Nullable="true" MaxLength="50" />
+          <Property Type="Int32" Name="Id" Nullable="false" />
+          <Property Type="Boolean" Name="isDeleted" Nullable="true" />
+          <Property Type="String" Name="Department" Nullable="true" MaxLength="50" />
+          <Property Type="String" Name="Designation" Nullable="true" MaxLength="50" />
+        </ComplexType>
+        <ComplexType Name="sp_SearchQuarters_Result">
+          <Property Type="Int32" Name="DepartmentId" Nullable="true" />
+          <Property Type="Int32" Name="DesignationId" Nullable="true" />
+          <Property Type="Int32" Name="Id" Nullable="true" />
+          <Property Type="String" Name="LastName" Nullable="true" MaxLength="50" />
+          <Property Type="String" Name="FirstName" Nullable="true" MaxLength="50" />
+          <Property Type="String" Name="Department" Nullable="true" MaxLength="50" />
+          <Property Type="String" Name="Designation" Nullable="true" MaxLength="50" />
+          <Property Type="Int32" Name="isEvaluated" Nullable="false" />
+          <Property Type="Int32" Name="isConfirmed" Nullable="false" />
+          <Property Type="Double" Name="TotalScore" Nullable="true" />
+        </ComplexType>
+        <ComplexType Name="sp_ValidateLogin_Result">
+          <Property Type="Int32" Name="ID" Nullable="false" />
+          <Property Type="String" Name="Username" Nullable="true" MaxLength="50" />
+          <Property Type="String" Name="Password" Nullable="true" MaxLength="50" />
+          <Property Type="String" Name="Email" Nullable="true" MaxLength="50" />
+          <Property Type="Boolean" Name="isDeleted" Nullable="true" />
+        </ComplexType>
+      </Schema>
+    </edmx:ConceptualModels>
+    <!-- C-S mapping content -->
+    <edmx:Mappings>
+      <Mapping Space="C-S" xmlns="http://schemas.microsoft.com/ado/2009/11/mapping/cs">
+        <EntityContainerMapping StorageEntityContainer="EmployeeEvaluationModelStoreContainer" CdmEntityContainer="EmployeeEvaluationEntities">
+          <EntitySetMapping Name="Accounts">
+            <EntityTypeMapping TypeName="EmployeeEvaluationModel.Account">
+              <MappingFragment StoreEntitySet="Accounts">
+                <ScalarProperty Name="ID" ColumnName="ID" />
+                <ScalarProperty Name="Username" ColumnName="Username" />
+                <ScalarProperty Name="Password" ColumnName="Password" />
+                <ScalarProperty Name="Email" ColumnName="Email" />
+                <ScalarProperty Name="isDeleted" ColumnName="isDeleted" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="CompetencyCats">
+            <EntityTypeMapping TypeName="EmployeeEvaluationModel.CompetencyCat">
+              <MappingFragment StoreEntitySet="CompetencyCat">
+                <ScalarProperty Name="Id" ColumnName="Id" />
+                <ScalarProperty Name="Name" ColumnName="Name" />
+                <ScalarProperty Name="WeightedScore" ColumnName="WeightedScore" />
+                <ScalarProperty Name="isDeleted" ColumnName="isDeleted" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="CoreCompetencies">
+            <EntityTypeMapping TypeName="EmployeeEvaluationModel.CoreCompetency">
+              <MappingFragment StoreEntitySet="CoreCompetency">
+                <ScalarProperty Name="Id" ColumnName="Id" />
+                <ScalarProperty Name="Name" ColumnName="Name" />
+                <ScalarProperty Name="QuestionString" ColumnName="QuestionString" />
+                <ScalarProperty Name="Weight" ColumnName="Weight" />
+                <ScalarProperty Name="CompetencyCatId" ColumnName="CompetencyCatId" />
+                <ScalarProperty Name="isDeleted" ColumnName="isDeleted" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="Departments">
+            <EntityTypeMapping TypeName="EmployeeEvaluationModel.Department">
+              <MappingFragment StoreEntitySet="Department">
+                <ScalarProperty Name="Id" ColumnName="Id" />
+                <ScalarProperty Name="Name" ColumnName="Name" />
+                <ScalarProperty Name="isDeleted" ColumnName="isDeleted" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="Designations">
+            <EntityTypeMapping TypeName="EmployeeEvaluationModel.Designation">
+              <MappingFragment StoreEntitySet="Designation">
+                <ScalarProperty Name="Id" ColumnName="Id" />
+                <ScalarProperty Name="Name" ColumnName="Name" />
+                <ScalarProperty Name="isDeleted" ColumnName="isDeleted" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="Employees">
+            <EntityTypeMapping TypeName="EmployeeEvaluationModel.Employee">
+              <MappingFragment StoreEntitySet="Employees">
+                <ScalarProperty Name="Id" ColumnName="Id" />
+                <ScalarProperty Name="FirstName" ColumnName="FirstName" />
+                <ScalarProperty Name="LastName" ColumnName="LastName" />
+                <ScalarProperty Name="DesignationId" ColumnName="DesignationId" />
+                <ScalarProperty Name="DepartmentId" ColumnName="DepartmentId" />
+                <ScalarProperty Name="isDeleted" ColumnName="isDeleted" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="EvalHeaders">
+            <EntityTypeMapping TypeName="EmployeeEvaluationModel.EvalHeader">
+              <MappingFragment StoreEntitySet="EvalHeader">
+                <ScalarProperty Name="Id" ColumnName="Id" />
+                <ScalarProperty Name="Quarter" ColumnName="Quarter" />
+                <ScalarProperty Name="Year" ColumnName="Year" />
+                <ScalarProperty Name="EmployeeId" ColumnName="EmployeeId" />
+                <ScalarProperty Name="AccountId" ColumnName="AccountId" />
+                <ScalarProperty Name="isDeleted" ColumnName="isDeleted" />
+                <ScalarProperty Name="isConfirmed" ColumnName="isConfirmed" />
+                <ScalarProperty Name="AreaToImprove" ColumnName="AreaToImprove" />
+                <ScalarProperty Name="Comment" ColumnName="Comment" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="EvalItems">
+            <EntityTypeMapping TypeName="EmployeeEvaluationModel.EvalItem">
+              <MappingFragment StoreEntitySet="EvalItem">
+                <ScalarProperty Name="Id" ColumnName="Id" />
+                <ScalarProperty Name="CoreCompetencyId" ColumnName="CoreCompetencyId" />
+                <ScalarProperty Name="Score" ColumnName="Score" />
+                <ScalarProperty Name="EvalHeaderId" ColumnName="EvalHeaderId" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="sysdiagrams">
+            <EntityTypeMapping TypeName="EmployeeEvaluationModel.sysdiagram">
+              <MappingFragment StoreEntitySet="sysdiagrams">
+                <ScalarProperty Name="name" ColumnName="name" />
+                <ScalarProperty Name="principal_id" ColumnName="principal_id" />
+                <ScalarProperty Name="diagram_id" ColumnName="diagram_id" />
+                <ScalarProperty Name="version" ColumnName="version" />
+                <ScalarProperty Name="definition" ColumnName="definition" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <FunctionImportMapping FunctionImportName="sp_AddAccounts" FunctionName="EmployeeEvaluationModel.Store.sp_AddAccounts" />
+          <FunctionImportMapping FunctionImportName="sp_AddCompetencyCat" FunctionName="EmployeeEvaluationModel.Store.sp_AddCompetencyCat" />
+          <FunctionImportMapping FunctionImportName="sp_AddCoreCompetency" FunctionName="EmployeeEvaluationModel.Store.sp_AddCoreCompetency" />
+          <FunctionImportMapping FunctionImportName="sp_AddDepartment" FunctionName="EmployeeEvaluationModel.Store.sp_AddDepartment" />
+          <FunctionImportMapping FunctionImportName="sp_AddDesignation" FunctionName="EmployeeEvaluationModel.Store.sp_AddDesignation" />
+          <FunctionImportMapping FunctionImportName="sp_AddEmployees" FunctionName="EmployeeEvaluationModel.Store.sp_AddEmployees" />
+          <FunctionImportMapping FunctionImportName="sp_AddEvalHeader" FunctionName="EmployeeEvaluationModel.Store.sp_AddEvalHeader" />
+          <FunctionImportMapping FunctionImportName="sp_AddEvalItem" FunctionName="EmployeeEvaluationModel.Store.sp_AddEvalItem" />
+          <FunctionImportMapping FunctionImportName="sp_alterdiagram" FunctionName="EmployeeEvaluationModel.Store.sp_alterdiagram" />
+          <FunctionImportMapping FunctionImportName="sp_creatediagram" FunctionName="EmployeeEvaluationModel.Store.sp_creatediagram" />
+          <FunctionImportMapping FunctionImportName="sp_DeleteAccounts" FunctionName="EmployeeEvaluationModel.Store.sp_DeleteAccounts" />
+          <FunctionImportMapping FunctionImportName="sp_DeleteCompetencyCat" FunctionName="EmployeeEvaluationModel.Store.sp_DeleteCompetencyCat" />
+          <FunctionImportMapping FunctionImportName="sp_DeleteCoreCompetency" FunctionName="EmployeeEvaluationModel.Store.sp_DeleteCoreCompetency" />
+          <FunctionImportMapping FunctionImportName="sp_DeleteDepartment" FunctionName="EmployeeEvaluationModel.Store.sp_DeleteDepartment" />
+          <FunctionImportMapping FunctionImportName="sp_DeleteDesignation" FunctionName="EmployeeEvaluationModel.Store.sp_DeleteDesignation" />
+          <FunctionImportMapping FunctionImportName="sp_DeleteEmployees" FunctionName="EmployeeEvaluationModel.Store.sp_DeleteEmployees" />
+          <FunctionImportMapping FunctionImportName="sp_dropdiagram" FunctionName="EmployeeEvaluationModel.Store.sp_dropdiagram" />
+          <FunctionImportMapping FunctionImportName="sp_EditAccounts" FunctionName="EmployeeEvaluationModel.Store.sp_EditAccounts" />
+          <FunctionImportMapping FunctionImportName="sp_EditCompetencyCat" FunctionName="EmployeeEvaluationModel.Store.sp_EditCompetencyCat" />
+          <FunctionImportMapping FunctionImportName="sp_EditCoreCompetency" FunctionName="EmployeeEvaluationModel.Store.sp_EditCoreCompetency" />
+          <FunctionImportMapping FunctionImportName="sp_EditDepartment" FunctionName="EmployeeEvaluationModel.Store.sp_EditDepartment" />
+          <FunctionImportMapping FunctionImportName="sp_EditDesignation" FunctionName="EmployeeEvaluationModel.Store.sp_EditDesignation" />
+          <FunctionImportMapping FunctionImportName="sp_EditEmployees" FunctionName="EmployeeEvaluationModel.Store.sp_EditEmployees" />
+          <FunctionImportMapping FunctionImportName="sp_GetEmployeeDetail" FunctionName="EmployeeEvaluationModel.Store.sp_GetEmployeeDetail">
+            <ResultMapping>
+              <ComplexTypeMapping TypeName="EmployeeEvaluationModel.sp_GetEmployeeDetail_Result">
+                <ScalarProperty Name="Id" ColumnName="Id" />
+                <ScalarProperty Name="FirstName" ColumnName="FirstName" />
+                <ScalarProperty Name="LastName" ColumnName="LastName" />
+                <ScalarProperty Name="DesignationId" ColumnName="DesignationId" />
+                <ScalarProperty Name="DepartmentId" ColumnName="DepartmentId" />
+                <ScalarProperty Name="isDeleted" ColumnName="isDeleted" />
+                <ScalarProperty Name="Department" ColumnName="Department" />
+                <ScalarProperty Name="Designation" ColumnName="Designation" />
+              </ComplexTypeMapping>
+            </ResultMapping>
+          </FunctionImportMapping>
+          <FunctionImportMapping FunctionImportName="sp_getForm" FunctionName="EmployeeEvaluationModel.Store.sp_getForm">
+            <ResultMapping>
+              <ComplexTypeMapping TypeName="EmployeeEvaluationModel.sp_getForm_Result">
+                <ScalarProperty Name="Id" ColumnName="Id" />
+                <ScalarProperty Name="Name" ColumnName="Name" />
+                <ScalarProperty Name="QuestionString" ColumnName="QuestionString" />
+                <ScalarProperty Name="Weight" ColumnName="Weight" />
+                <ScalarProperty Name="CompetencyCatId" ColumnName="CompetencyCatId" />
+                <ScalarProperty Name="isDeleted" ColumnName="isDeleted" />
+                <ScalarProperty Name="itemScore" ColumnName="itemScore" />
+              </ComplexTypeMapping>
+            </ResultMapping>
+          </FunctionImportMapping>
+          <FunctionImportMapping FunctionImportName="sp_GetHeader" FunctionName="EmployeeEvaluationModel.Store.sp_GetHeader">
+            <ResultMapping>
+              <ComplexTypeMapping TypeName="EmployeeEvaluationModel.sp_GetHeader_Result">
+                <ScalarProperty Name="Comment" ColumnName="Comment" />
+                <ScalarProperty Name="AreaToImprove" ColumnName="AreaToImprove" />
+                <ScalarProperty Name="Username" ColumnName="Username" />
+              </ComplexTypeMapping>
+            </ResultMapping>
+          </FunctionImportMapping>
+          <FunctionImportMapping FunctionImportName="sp_GetSumCat" FunctionName="EmployeeEvaluationModel.Store.sp_GetSumCat" />
+          <FunctionImportMapping FunctionImportName="sp_GetSumCompetency" FunctionName="EmployeeEvaluationModel.Store.sp_GetSumCompetency" />
+          <FunctionImportMapping FunctionImportName="sp_getYearGraph" FunctionName="EmployeeEvaluationModel.Store.sp_getYearGraph">
+            <ResultMapping>
+              <ComplexTypeMapping TypeName="EmployeeEvaluationModel.sp_getYearGraph_Result">
+                <ScalarProperty Name="NAME" ColumnName="NAME" />
+                <ScalarProperty Name="Q1" ColumnName="Q1" />
+                <ScalarProperty Name="Q2" ColumnName="Q2" />
+                <ScalarProperty Name="Q3" ColumnName="Q3" />
+                <ScalarProperty Name="Q4" ColumnName="Q4" />
+              </ComplexTypeMapping>
+            </ResultMapping>
+          </FunctionImportMapping>
+          <FunctionImportMapping FunctionImportName="sp_helpdiagramdefinition" FunctionName="EmployeeEvaluationModel.Store.sp_helpdiagramdefinition">
+            <ResultMapping>
+              <ComplexTypeMapping TypeName="EmployeeEvaluationModel.sp_helpdiagramdefinition_Result">
+                <ScalarProperty Name="version" ColumnName="version" />
+                <ScalarProperty Name="definition" ColumnName="definition" />
+              </ComplexTypeMapping>
+            </ResultMapping>
+          </FunctionImportMapping>
+          <FunctionImportMapping FunctionImportName="sp_helpdiagrams" FunctionName="EmployeeEvaluationModel.Store.sp_helpdiagrams">
+            <ResultMapping>
+              <ComplexTypeMapping TypeName="EmployeeEvaluationModel.sp_helpdiagrams_Result">
+                <ScalarProperty Name="Database" ColumnName="Database" />
+                <ScalarProperty Name="Name" ColumnName="Name" />
+                <ScalarProperty Name="ID" ColumnName="ID" />
+                <ScalarProperty Name="Owner" ColumnName="Owner" />
+                <ScalarProperty Name="OwnerID" ColumnName="OwnerID" />
+              </ComplexTypeMapping>
+            </ResultMapping>
+          </FunctionImportMapping>
+          <FunctionImportMapping FunctionImportName="sp_renamediagram" FunctionName="EmployeeEvaluationModel.Store.sp_renamediagram" />
+          <FunctionImportMapping FunctionImportName="sp_SearchAccounts" FunctionName="EmployeeEvaluationModel.Store.sp_SearchAccounts">
+            <ResultMapping>
+              <ComplexTypeMapping TypeName="EmployeeEvaluationModel.sp_SearchAccounts_Result">
+                <ScalarProperty Name="ID" ColumnName="ID" />
+                <ScalarProperty Name="Username" ColumnName="Username" />
+                <ScalarProperty Name="Password" ColumnName="Password" />
+                <ScalarProperty Name="Email" ColumnName="Email" />
+                <ScalarProperty Name="isDeleted" ColumnName="isDeleted" />
+              </ComplexTypeMapping>
+            </ResultMapping>
+          </FunctionImportMapping>
+          <FunctionImportMapping FunctionImportName="sp_SearchCompetencyCat" FunctionName="EmployeeEvaluationModel.Store.sp_SearchCompetencyCat">
+            <ResultMapping>
+              <ComplexTypeMapping TypeName="EmployeeEvaluationModel.sp_SearchCompetencyCat_Result">
+                <ScalarProperty Name="Id" ColumnName="Id" />
+                <ScalarProperty Name="Name" ColumnName="Name" />
+                <ScalarProperty Name="WeightedScore" ColumnName="WeightedScore" />
+                <ScalarProperty Name="isDeleted" ColumnName="isDeleted" />
+              </ComplexTypeMapping>
+            </ResultMapping>
+          </FunctionImportMapping>
+          <FunctionImportMapping FunctionImportName="sp_SearchCoreCompetency" FunctionName="EmployeeEvaluationModel.Store.sp_SearchCoreCompetency">
+            <ResultMapping>
+              <ComplexTypeMapping TypeName="EmployeeEvaluationModel.sp_SearchCoreCompetency_Result">
+                <ScalarProperty Name="Id" ColumnName="Id" />
+                <ScalarProperty Name="Name" ColumnName="Name" />
+                <ScalarProperty Name="QuestionString" ColumnName="QuestionString" />
+                <ScalarProperty Name="Weight" ColumnName="Weight" />
+                <ScalarProperty Name="CompetencyCatId" ColumnName="CompetencyCatId" />
+                <ScalarProperty Name="isDeleted" ColumnName="isDeleted" />
+              </ComplexTypeMapping>
+            </ResultMapping>
+          </FunctionImportMapping>
+          <FunctionImportMapping FunctionImportName="sp_SearchDepartment" FunctionName="EmployeeEvaluationModel.Store.sp_SearchDepartment">
+            <ResultMapping>
+              <ComplexTypeMapping TypeName="EmployeeEvaluationModel.sp_SearchDepartment_Result">
+                <ScalarProperty Name="Id" ColumnName="Id" />
+                <ScalarProperty Name="Name" ColumnName="Name" />
+                <ScalarProperty Name="isDeleted" ColumnName="isDeleted" />
+              </ComplexTypeMapping>
+            </ResultMapping>
+          </FunctionImportMapping>
+          <FunctionImportMapping FunctionImportName="sp_SearchDesignation" FunctionName="EmployeeEvaluationModel.Store.sp_SearchDesignation">
+            <ResultMapping>
+              <ComplexTypeMapping TypeName="EmployeeEvaluationModel.sp_SearchDesignation_Result">
+                <ScalarProperty Name="Id" ColumnName="Id" />
+                <ScalarProperty Name="Name" ColumnName="Name" />
+                <ScalarProperty Name="isDeleted" ColumnName="isDeleted" />
+              </ComplexTypeMapping>
+            </ResultMapping>
+          </FunctionImportMapping>
+          <FunctionImportMapping FunctionImportName="sp_SearchEmployees" FunctionName="EmployeeEvaluationModel.Store.sp_SearchEmployees">
+            <ResultMapping>
+              <ComplexTypeMapping TypeName="EmployeeEvaluationModel.sp_SearchEmployees_Result">
+                <ScalarProperty Name="DepartmentId" ColumnName="DepartmentId" />
+                <ScalarProperty Name="DesignationId" ColumnName="DesignationId" />
+                <ScalarProperty Name="LastName" ColumnName="LastName" />
+                <ScalarProperty Name="FirstName" ColumnName="FirstName" />
+                <ScalarProperty Name="Id" ColumnName="Id" />
+                <ScalarProperty Name="isDeleted" ColumnName="isDeleted" />
+                <ScalarProperty Name="Department" ColumnName="Department" />
+                <ScalarProperty Name="Designation" ColumnName="Designation" />
+              </ComplexTypeMapping>
+            </ResultMapping>
+          </FunctionImportMapping>
+          <FunctionImportMapping FunctionImportName="sp_SearchQuarters" FunctionName="EmployeeEvaluationModel.Store.sp_SearchQuarters">
+            <ResultMapping>
+              <ComplexTypeMapping TypeName="EmployeeEvaluationModel.sp_SearchQuarters_Result">
+                <ScalarProperty Name="DepartmentId" ColumnName="DepartmentId" />
+                <ScalarProperty Name="DesignationId" ColumnName="DesignationId" />
+                <ScalarProperty Name="Id" ColumnName="Id" />
+                <ScalarProperty Name="LastName" ColumnName="LastName" />
+                <ScalarProperty Name="FirstName" ColumnName="FirstName" />
+                <ScalarProperty Name="Department" ColumnName="Department" />
+                <ScalarProperty Name="Designation" ColumnName="Designation" />
+                <ScalarProperty Name="isEvaluated" ColumnName="isEvaluated" />
+                <ScalarProperty Name="isConfirmed" ColumnName="isConfirmed" />
+                <ScalarProperty Name="TotalScore" ColumnName="TotalScore" />
+              </ComplexTypeMapping>
+            </ResultMapping>
+          </FunctionImportMapping>
+          <FunctionImportMapping FunctionImportName="sp_upgraddiagrams" FunctionName="EmployeeEvaluationModel.Store.sp_upgraddiagrams" />
+          <FunctionImportMapping FunctionImportName="sp_ValidateLogin" FunctionName="EmployeeEvaluationModel.Store.sp_ValidateLogin">
+            <ResultMapping>
+              <ComplexTypeMapping TypeName="EmployeeEvaluationModel.sp_ValidateLogin_Result">
+                <ScalarProperty Name="ID" ColumnName="ID" />
+                <ScalarProperty Name="Username" ColumnName="Username" />
+                <ScalarProperty Name="Password" ColumnName="Password" />
+                <ScalarProperty Name="Email" ColumnName="Email" />
+                <ScalarProperty Name="isDeleted" ColumnName="isDeleted" />
+              </ComplexTypeMapping>
+            </ResultMapping>
+          </FunctionImportMapping>
+        </EntityContainerMapping>
+      </Mapping>
+    </edmx:Mappings>
+  </edmx:Runtime>
+  <!-- EF Designer content (DO NOT EDIT MANUALLY BELOW HERE) -->
+  <Designer xmlns="http://schemas.microsoft.com/ado/2009/11/edmx">
+    <Connection>
+      <DesignerInfoPropertySet>
+        <DesignerProperty Name="MetadataArtifactProcessing" Value="EmbedInOutputAssembly" />
+      </DesignerInfoPropertySet>
+    </Connection>
+    <Options>
+      <DesignerInfoPropertySet>
+        <DesignerProperty Name="ValidateOnBuild" Value="true" />
+        <DesignerProperty Name="EnablePluralization" Value="true" />
+        <DesignerProperty Name="IncludeForeignKeysInModel" Value="true" />
+        <DesignerProperty Name="UseLegacyProvider" Value="false" />
+        <DesignerProperty Name="CodeGenerationStrategy" Value="None" />
+      </DesignerInfoPropertySet>
+    </Options>
+    <!-- Diagram content (shape and connector positions) -->
+    <Diagrams></Diagrams>
+  </Designer>
+</edmx:Edmx>

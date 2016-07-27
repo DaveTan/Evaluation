@@ -1,0 +1,128 @@
+﻿
+@{
+    ViewBag.Title = "Accounts";
+}
+
+<table class="table table-condensed">
+    <thead>
+        <tr>
+            <th>
+                <h2>@ViewBag.Title</h2>
+            </th>
+        </tr>
+    </thead>
+</table>
+
+@(Html.BootstrapTable<Evaluation.WebMVC.Models.sp_SearchAccounts_Result>(Url.Action("SearchAccounts"), TablePaginationOption.server)
+        .Apply(TableOption.showRefresh, TableOption.search)
+        .Column("is Deleted")
+        .Apply(ColumnOption.visible, false)
+        .Column("ID")
+        .Apply(ColumnOption.visible, false)
+        .Column("Action")
+        .Apply(ColumnOption.formatter, "menuFormatter")
+        .Apply(ColumnOption.width, 150)
+        .Apply(TableOption.toolbar, @"
+            <button data-toggle='modal' data-target='#Add' type='button' class='btn btn-default'>+</button>
+        ")
+)
+
+<div id="Add" class="modal fade" role="dialog">
+    <div class="modal-dialog" style="width:400px">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal">&times;</button>
+                <h4 class="modal-title">Add</h4>
+            </div>
+            <form action="" method="post" enctype="multipart/form-data">
+                <div class="modal-body">
+                    <label for="Username">Username</label>
+                    <input class="form-control" id="Username" name="Username" onblur="checkTextField(this);">
+                    <label for="Password">Password</label>
+                    <input class="form-control" id="Password" name="Password" onblur="checkTextField(this);">
+                    <label for="Email">Email</label>
+                    <input class="form-control" id="Email" name="Email" onblur="checkTextField(this);">
+                </div>
+                <div class="modal-footer">
+                    <button type="submit" class="btn btn-default" id="Category" name="Add" value="Add">Submit</button>
+                    <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+<div id="Delete" class="modal fade" role="dialog">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal">&times;</button>
+                <h4 class="modal-title">Delete</h4>
+            </div>
+            <form action="" method="post" enctype="multipart/form-data">
+                <div class="modal-body">
+                    <p>Are you sure you want to delete this item?</p>
+                </div>
+                <div class="modal-footer">
+                    <a href="#" type="button" class="btn btn-default" data-dismiss="modal" onclick="Delete(currId)">Confirm</a>
+                    <button type="button" class="btn btn-default" data-dismiss="modal">Cancel</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+<div id="Edit" class="modal fade" role="dialog">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal">&times;</button>
+                <h4 class="modal-title">Edit</h4>
+            </div>
+            <form action="" method="post" enctype="multipart/form-data">
+                <div class="modal-body">
+                    <form action='' method='post' enctype='multipart/form-data'>
+                        <input type="hidden" id="Id" name="Id" />
+                        <label for="UsernameEdit">Username</label>
+                        <input class="form-control" id="UsernameEdit" name="UsernameEdit" onblur="checkTextField(this);">
+                        <label for="Password">Password</label>
+                        <input class="form-control" id="PasswordEdit" name="PasswordEdit" onblur="checkTextField(this);">
+                        <label for="EmailEdit">Email</label>
+                        <input class="form-control" id="EmailEdit" name="EmailEdit" onblur="checkTextField(this);">
+                </div>
+                <div class="modal-footer">
+                    <button type='submit' class='btn btn-default' name='EditDesignation' id='EditDesignation' value='EditAcc'>Confirm</button>
+            </form>
+            <button type="button" class="btn btn-default" data-dismiss="modal">Cancel</button>
+        </div>
+        </form>
+    </div>
+</div>
+
+<script>
+    var currId;
+    var currData;
+    function menuFormatter(value, row, index) {
+        return [
+            "<button data-toggle='modal' data-target='#Edit'  type='button' class='btn btn-link' value='" + JSON.stringify(row) + "'  onclick='updateEdit(value)'>Edit</button>",
+            "<button data-toggle='modal' data-target='#Delete'  type='button' class='btn btn-link' value='"+row["ID"]+"'  onclick='updateId(value)'>Delete</button>"
+        ].join(' ').replace(/%7B0%7D/g, row["Id"]);
+    }
+    function updateId(id) {
+        currId = id;
+    }
+    function updateEdit(data) {
+        temp = JSON.parse(data);
+        var HtmlElement = document.getElementById('UsernameEdit');
+        HtmlElement.value = temp["Username"];
+        var HtmlElement = document.getElementById('PasswordEdit');
+        HtmlElement.value = temp["Password"];
+        var HtmlElement = document.getElementById('EmailEdit');
+        HtmlElement.value = temp["Email"];
+        var HtmlElement = document.getElementById('Id');
+        HtmlElement.value = temp["ID"];
+    }
+    function Delete(id) {
+        window.location = "DeleteAccounts/" + id;
+    }
+</script>

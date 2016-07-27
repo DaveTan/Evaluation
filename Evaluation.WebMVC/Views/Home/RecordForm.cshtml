@@ -1,0 +1,159 @@
+﻿@{
+    ViewBag.Title = "QUARTERLY PERFORMANCE EVALUATION FORM  ";
+    using (var ctx = new Evaluation.WebMVC.Models.EmployeeEvaluationEntities())
+    {
+        var resultset = ctx.sp_GetEmployeeDetail(Convert.ToInt32(Session["EvalId"])).ToArray()[0];
+        ViewBag.EmployeeData = resultset;
+        var rs = ctx.sp_GetHeader(Convert.ToInt32(Session["EvalId"]), Convert.ToInt32(Session["Year"]), Convert.ToInt32(Session["Quarter"])).ToList();
+        ViewBag.Evaluator = Session["Username"];
+        foreach (var c in rs)
+        {
+            ViewBag.Evaluator = c.Username;
+        }
+    }
+}
+<button class="btn btn-default" onclick="printdiv('FormContent')">Print</button>
+<div id="FormContent">
+    <table class="table table-condensed">
+        <thead>
+            <tr>
+                <th>
+                    <img border="0" alt="NMI-Logo" src="~/logo.png" /><br /><br /><h5><strong>@ViewBag.Title</strong></h5>
+                </th>
+            </tr>
+        </thead>
+    </table>
+
+    <form action="" method="post" enctype="multipart/form-data">
+        <input type="hidden" name="Quarter" value="@Session["Quarter"]" />
+        <input type="hidden" name="Year" value="@Session["Year"]" />
+        <input type="hidden" name="EmployeeId" value="@Session["EvalId"]" />
+        <table class="table table-bordered">
+            <tbody>
+                <tr>
+                    <td class="col-sm-2">
+                        <strong>Year</strong>
+                    </td>
+                    <td>@Session["Year"]</td>
+                    <td class="col-sm-2">
+                        <strong>Quarter</strong>
+                    </td>
+                    <td>@Session["Quarter"]</td>
+                </tr>
+                <tr>
+                    <td class="col-sm-2">
+                        <strong>First Name</strong>
+                    </td>
+                    <td>@ViewBag.EmployeeData.FirstName</td>
+                    <td class="col-sm-2">
+                        <strong>Last Name</strong>
+                    </td>
+                    <td>@ViewBag.EmployeeData.LastName</td>
+                </tr>
+                <tr>
+                    <td class="col-sm-2">
+                        <strong>Designation</strong>
+                    </td>
+                    <td>@ViewBag.EmployeeData.Department</td>
+                    <td class="col-sm-2">
+                        <strong>Department</strong>
+                    </td>
+                    <td>@ViewBag.EmployeeData.Designation</td>
+                </tr>
+                <tr>
+                    <td class="col-sm-2">
+                        <strong>Evaluator</strong>
+                    </td>
+                    <td class="col-sm-2">
+                        @ViewBag.Evaluator
+                    </td>
+                    <td class="col-sm-2"></td>
+                    <td class="col-sm-2"></td>
+                </tr>
+            </tbody>
+        </table>
+        @{
+            double gwa = 0;
+            using (var ctx = new Evaluation.WebMVC.Models.EmployeeEvaluationEntities())
+            {
+                var ResultCat = ctx.sp_SearchCompetencyCat("");
+                foreach (var c in ResultCat)
+                {
+                    double totalCat = 0;
+                    @Html.Raw(@"
+                    <h5 style='float:left'><strong>" + c.Name + @"</strong></h5>
+                    <table class='table table-bordered'>
+                        <thead>
+                            <tr>
+                                <td class='col-md-9'><strong>Description</strong></td>
+                                <td class='col-md-1'><strong>Score</strong></td>
+                                <td class='col-md-1'><strong>Weight</strong></td>
+                                <td class='col-md-'><strong>Weighted Score</strong></td>
+                            </tr>
+                            <tr>
+                                <td colspan='3'><strong>CORE COMPETENCIES</strong></td>
+                                <td><strong>" + c.WeightedScore+@"%</strong></td>
+                            </tr>
+                        </thead>
+                        </tbody>
+                    ");
+                    var ResultRec = ctx.sp_getForm(c.Id, Convert.ToInt32(Session["Year"]), Convert.ToInt32(Session["Quarter"]), Convert.ToInt32(Session["EvalId"]));
+                    foreach (var k in ResultRec)
+                    {
+                        @Html.Raw(@"
+                            <tr>
+                                " + string.Format("<td><strong><u>{0}</u></strong><br>{1}</td>", k.Name, k.QuestionString.Replace(System.Environment.NewLine, "<br/>")) + @"
+                                <td>"+k.itemScore+@"</td>
+                                <td>"+k.Weight+@"%</td>
+                                <td>"+Convert.ToInt32(k.itemScore)*(Convert.ToInt32(k.Weight)*0.01)+@"</td>
+                            </tr>
+                        ");
+                          totalCat += Convert.ToInt32(k.itemScore) * (Convert.ToInt32(k.Weight) * 0.01);
+                    }
+                    gwa += totalCat * (Convert.ToDouble(c.WeightedScore) * 0.01);
+                    @Html.Raw(@"
+                        <tr>
+                            <td colspan = '3'><strong>Total:</strong></td>
+                            <td><strong>"+totalCat+@"</strong></td>
+                        </tr>
+                        </tbody>
+                        </table>
+                    ");
+                }
+                var rs = ctx.sp_GetHeader(Convert.ToInt32(Session["EvalId"]), Convert.ToInt32(Session["Year"]), Convert.ToInt32(Session["Quarter"])).ToList();
+                foreach (var c in rs)
+                {
+                    ViewBag.Comment = c.Comment;
+                    ViewBag.Improve = c.AreaToImprove;
+                }
+                ViewBag.GWA = gwa;
+            }
+}
+        <div style="border:1px solid">
+            <h5 style='float:left;margin-left:10px;margin-right:10px'><strong>GWA:</strong></h5>
+            <h5 style='float:right;margin-left:10px;margin-right:10px'><strong><p id='GWA'>@ViewBag.GWA</p></strong></h5>
+            <br />
+            <br />
+        </div>
+        <br />
+        <label for="Improve">Areas to Improve</label>
+        <textarea readonly class="form-control" id="Improve" name="Improve" rows="2" style="background-color:white">@ViewBag.Improve</textarea>
+
+        <label for="Comments">Comments</label>
+        <textarea readonly class="form-control" id="Comments" name="Comments" rows="5" style="background-color:white">@ViewBag.Comment</textarea>
+</div>
+
+
+
+<script>
+    function printdiv(printpage) {
+        var headstr = "<html><head><title></title></head><body>";
+        var footstr = "</body>";
+        var newstr = document.all.item(printpage).innerHTML;
+        var oldstr = document.body.innerHTML;
+        document.body.innerHTML = headstr + newstr + footstr;
+        window.print();
+        document.body.innerHTML = oldstr;
+        return false;
+    }
+</script>

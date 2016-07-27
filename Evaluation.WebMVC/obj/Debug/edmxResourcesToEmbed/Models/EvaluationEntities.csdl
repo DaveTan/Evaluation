@@ -1,0 +1,438 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Schema Namespace="EmployeeEvaluationModel" Alias="Self" annotation:UseStrongSpatialTypes="false" xmlns:annotation="http://schemas.microsoft.com/ado/2009/02/edm/annotation" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm">
+  <EntityType Name="Account">
+    <Key>
+      <PropertyRef Name="ID" />
+    </Key>
+    <Property Name="ID" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+    <Property Name="Username" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
+    <Property Name="Password" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
+    <Property Name="Email" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
+    <Property Name="isDeleted" Type="Boolean" />
+    <NavigationProperty Name="EvalHeaders" Relationship="Self.FK_EvalHeader_Accounts" FromRole="Accounts" ToRole="EvalHeader" />
+  </EntityType>
+  <EntityType Name="CompetencyCat">
+    <Key>
+      <PropertyRef Name="Id" />
+    </Key>
+    <Property Name="Id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+    <Property Name="Name" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
+    <Property Name="WeightedScore" Type="Int32" />
+    <Property Name="isDeleted" Type="Boolean" />
+    <NavigationProperty Name="CoreCompetencies" Relationship="Self.FK_CoreCompetency_CompetencyCat" FromRole="CompetencyCat" ToRole="CoreCompetency" />
+  </EntityType>
+  <EntityType Name="CoreCompetency">
+    <Key>
+      <PropertyRef Name="Id" />
+    </Key>
+    <Property Name="Id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+    <Property Name="Name" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
+    <Property Name="QuestionString" Type="String" MaxLength="Max" FixedLength="false" Unicode="false" />
+    <Property Name="Weight" Type="Int32" />
+    <Property Name="CompetencyCatId" Type="Int32" />
+    <Property Name="isDeleted" Type="Boolean" />
+    <NavigationProperty Name="CompetencyCat" Relationship="Self.FK_CoreCompetency_CompetencyCat" FromRole="CoreCompetency" ToRole="CompetencyCat" />
+  </EntityType>
+  <EntityType Name="Department">
+    <Key>
+      <PropertyRef Name="Id" />
+    </Key>
+    <Property Name="Id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+    <Property Name="Name" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
+    <Property Name="isDeleted" Type="Boolean" />
+    <NavigationProperty Name="Employees" Relationship="Self.FK_Employees_Department" FromRole="Department" ToRole="Employees" />
+  </EntityType>
+  <EntityType Name="Designation">
+    <Key>
+      <PropertyRef Name="Id" />
+    </Key>
+    <Property Name="Id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+    <Property Name="Name" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
+    <Property Name="isDeleted" Type="Boolean" />
+    <NavigationProperty Name="Employees" Relationship="Self.FK_Employees_Designation" FromRole="Designation" ToRole="Employees" />
+  </EntityType>
+  <EntityType Name="Employee">
+    <Key>
+      <PropertyRef Name="Id" />
+    </Key>
+    <Property Name="Id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+    <Property Name="FirstName" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
+    <Property Name="LastName" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
+    <Property Name="DesignationId" Type="Int32" />
+    <Property Name="DepartmentId" Type="Int32" />
+    <Property Name="isDeleted" Type="Boolean" />
+    <NavigationProperty Name="Department" Relationship="Self.FK_Employees_Department" FromRole="Employees" ToRole="Department" />
+    <NavigationProperty Name="Designation" Relationship="Self.FK_Employees_Designation" FromRole="Employees" ToRole="Designation" />
+    <NavigationProperty Name="EvalHeaders" Relationship="Self.FK_EvalHeader_Employees" FromRole="Employees" ToRole="EvalHeader" />
+  </EntityType>
+  <EntityType Name="EvalHeader">
+    <Key>
+      <PropertyRef Name="Id" />
+    </Key>
+    <Property Name="Id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+    <Property Name="Quarter" Type="Int32" />
+    <Property Name="Year" Type="Int32" />
+    <Property Name="EmployeeId" Type="Int32" />
+    <Property Name="AccountId" Type="Int32" />
+    <Property Name="isDeleted" Type="Boolean" />
+    <Property Name="isConfirmed" Type="Boolean" />
+    <Property Name="AreaToImprove" Type="String" MaxLength="Max" FixedLength="false" Unicode="false" />
+    <Property Name="Comment" Type="String" MaxLength="Max" FixedLength="false" Unicode="false" />
+    <NavigationProperty Name="Account" Relationship="Self.FK_EvalHeader_Accounts" FromRole="EvalHeader" ToRole="Accounts" />
+    <NavigationProperty Name="Employee" Relationship="Self.FK_EvalHeader_Employees" FromRole="EvalHeader" ToRole="Employees" />
+    <NavigationProperty Name="EvalItems" Relationship="Self.FK_EvalItem_EvalHeader" FromRole="EvalHeader" ToRole="EvalItem" />
+  </EntityType>
+  <EntityType Name="EvalItem">
+    <Key>
+      <PropertyRef Name="Id" />
+    </Key>
+    <Property Name="Id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+    <Property Name="CoreCompetencyId" Type="Int32" />
+    <Property Name="Score" Type="Int32" />
+    <Property Name="EvalHeaderId" Type="Int32" />
+    <NavigationProperty Name="EvalHeader" Relationship="Self.FK_EvalItem_EvalHeader" FromRole="EvalItem" ToRole="EvalHeader" />
+  </EntityType>
+  <EntityType Name="sysdiagram">
+    <Key>
+      <PropertyRef Name="diagram_id" />
+    </Key>
+    <Property Name="name" Type="String" MaxLength="128" FixedLength="false" Unicode="true" Nullable="false" />
+    <Property Name="principal_id" Type="Int32" Nullable="false" />
+    <Property Name="diagram_id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+    <Property Name="version" Type="Int32" />
+    <Property Name="definition" Type="Binary" MaxLength="Max" FixedLength="false" />
+  </EntityType>
+  <Association Name="FK_EvalHeader_Accounts">
+    <End Role="Accounts" Type="Self.Account" Multiplicity="0..1" />
+    <End Role="EvalHeader" Type="Self.EvalHeader" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="Accounts">
+        <PropertyRef Name="ID" />
+      </Principal>
+      <Dependent Role="EvalHeader">
+        <PropertyRef Name="AccountId" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="FK_CoreCompetency_CompetencyCat">
+    <End Role="CompetencyCat" Type="Self.CompetencyCat" Multiplicity="0..1" />
+    <End Role="CoreCompetency" Type="Self.CoreCompetency" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="CompetencyCat">
+        <PropertyRef Name="Id" />
+      </Principal>
+      <Dependent Role="CoreCompetency">
+        <PropertyRef Name="CompetencyCatId" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="FK_Employees_Department">
+    <End Role="Department" Type="Self.Department" Multiplicity="0..1" />
+    <End Role="Employees" Type="Self.Employee" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="Department">
+        <PropertyRef Name="Id" />
+      </Principal>
+      <Dependent Role="Employees">
+        <PropertyRef Name="DepartmentId" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="FK_Employees_Designation">
+    <End Role="Designation" Type="Self.Designation" Multiplicity="0..1" />
+    <End Role="Employees" Type="Self.Employee" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="Designation">
+        <PropertyRef Name="Id" />
+      </Principal>
+      <Dependent Role="Employees">
+        <PropertyRef Name="DesignationId" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="FK_EvalHeader_Employees">
+    <End Role="Employees" Type="Self.Employee" Multiplicity="0..1" />
+    <End Role="EvalHeader" Type="Self.EvalHeader" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="Employees">
+        <PropertyRef Name="Id" />
+      </Principal>
+      <Dependent Role="EvalHeader">
+        <PropertyRef Name="EmployeeId" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="FK_EvalItem_EvalHeader">
+    <End Role="EvalHeader" Type="Self.EvalHeader" Multiplicity="0..1" />
+    <End Role="EvalItem" Type="Self.EvalItem" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="EvalHeader">
+        <PropertyRef Name="Id" />
+      </Principal>
+      <Dependent Role="EvalItem">
+        <PropertyRef Name="EvalHeaderId" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <EntityContainer Name="EmployeeEvaluationEntities" annotation:LazyLoadingEnabled="true">
+    <EntitySet Name="Accounts" EntityType="Self.Account" />
+    <EntitySet Name="CompetencyCats" EntityType="Self.CompetencyCat" />
+    <EntitySet Name="CoreCompetencies" EntityType="Self.CoreCompetency" />
+    <EntitySet Name="Departments" EntityType="Self.Department" />
+    <EntitySet Name="Designations" EntityType="Self.Designation" />
+    <EntitySet Name="Employees" EntityType="Self.Employee" />
+    <EntitySet Name="EvalHeaders" EntityType="Self.EvalHeader" />
+    <EntitySet Name="EvalItems" EntityType="Self.EvalItem" />
+    <EntitySet Name="sysdiagrams" EntityType="Self.sysdiagram" />
+    <AssociationSet Name="FK_EvalHeader_Accounts" Association="Self.FK_EvalHeader_Accounts">
+      <End Role="Accounts" EntitySet="Accounts" />
+      <End Role="EvalHeader" EntitySet="EvalHeaders" />
+    </AssociationSet>
+    <AssociationSet Name="FK_CoreCompetency_CompetencyCat" Association="Self.FK_CoreCompetency_CompetencyCat">
+      <End Role="CompetencyCat" EntitySet="CompetencyCats" />
+      <End Role="CoreCompetency" EntitySet="CoreCompetencies" />
+    </AssociationSet>
+    <AssociationSet Name="FK_Employees_Department" Association="Self.FK_Employees_Department">
+      <End Role="Department" EntitySet="Departments" />
+      <End Role="Employees" EntitySet="Employees" />
+    </AssociationSet>
+    <AssociationSet Name="FK_Employees_Designation" Association="Self.FK_Employees_Designation">
+      <End Role="Designation" EntitySet="Designations" />
+      <End Role="Employees" EntitySet="Employees" />
+    </AssociationSet>
+    <AssociationSet Name="FK_EvalHeader_Employees" Association="Self.FK_EvalHeader_Employees">
+      <End Role="Employees" EntitySet="Employees" />
+      <End Role="EvalHeader" EntitySet="EvalHeaders" />
+    </AssociationSet>
+    <AssociationSet Name="FK_EvalItem_EvalHeader" Association="Self.FK_EvalItem_EvalHeader">
+      <End Role="EvalHeader" EntitySet="EvalHeaders" />
+      <End Role="EvalItem" EntitySet="EvalItems" />
+    </AssociationSet>
+    <FunctionImport Name="sp_AddAccounts">
+      <Parameter Name="Username" Mode="In" Type="String" />
+      <Parameter Name="Password" Mode="In" Type="String" />
+      <Parameter Name="Email" Mode="In" Type="String" />
+    </FunctionImport>
+    <FunctionImport Name="sp_AddCompetencyCat">
+      <Parameter Name="Name" Mode="In" Type="String" />
+      <Parameter Name="WeightedScore" Mode="In" Type="Int32" />
+    </FunctionImport>
+    <FunctionImport Name="sp_AddCoreCompetency">
+      <Parameter Name="Name" Mode="In" Type="String" />
+      <Parameter Name="QuestionString" Mode="In" Type="String" />
+      <Parameter Name="Weight" Mode="In" Type="Int32" />
+      <Parameter Name="CompetenctCatId" Mode="In" Type="Int32" />
+    </FunctionImport>
+    <FunctionImport Name="sp_AddDepartment">
+      <Parameter Name="Name" Mode="In" Type="String" />
+    </FunctionImport>
+    <FunctionImport Name="sp_AddDesignation">
+      <Parameter Name="Name" Mode="In" Type="String" />
+    </FunctionImport>
+    <FunctionImport Name="sp_AddEmployees">
+      <Parameter Name="FirstName" Mode="In" Type="String" />
+      <Parameter Name="LastName" Mode="In" Type="String" />
+      <Parameter Name="DepartmentId" Mode="In" Type="Int32" />
+      <Parameter Name="DesignationId" Mode="In" Type="Int32" />
+    </FunctionImport>
+    <FunctionImport Name="sp_AddEvalHeader" ReturnType="Collection(Decimal)">
+      <Parameter Name="Quarter" Mode="In" Type="Int32" />
+      <Parameter Name="Year" Mode="In" Type="Int32" />
+      <Parameter Name="EmployeeId" Mode="In" Type="Int32" />
+      <Parameter Name="AccountId" Mode="In" Type="Int32" />
+      <Parameter Name="isConfirmed" Mode="In" Type="Boolean" />
+      <Parameter Name="AreaToImprove" Mode="In" Type="String" />
+      <Parameter Name="Comment" Mode="In" Type="String" />
+    </FunctionImport>
+    <FunctionImport Name="sp_AddEvalItem">
+      <Parameter Name="CoreCompetencyId" Mode="In" Type="Int32" />
+      <Parameter Name="Score" Mode="In" Type="Int32" />
+      <Parameter Name="EvalHeaderId" Mode="In" Type="Int32" />
+    </FunctionImport>
+    <FunctionImport Name="sp_alterdiagram">
+      <Parameter Name="diagramname" Mode="In" Type="String" />
+      <Parameter Name="owner_id" Mode="In" Type="Int32" />
+      <Parameter Name="version" Mode="In" Type="Int32" />
+      <Parameter Name="definition" Mode="In" Type="Binary" />
+    </FunctionImport>
+    <FunctionImport Name="sp_creatediagram">
+      <Parameter Name="diagramname" Mode="In" Type="String" />
+      <Parameter Name="owner_id" Mode="In" Type="Int32" />
+      <Parameter Name="version" Mode="In" Type="Int32" />
+      <Parameter Name="definition" Mode="In" Type="Binary" />
+    </FunctionImport>
+    <FunctionImport Name="sp_DeleteAccounts">
+      <Parameter Name="Id" Mode="In" Type="Int32" />
+    </FunctionImport>
+    <FunctionImport Name="sp_DeleteCompetencyCat">
+      <Parameter Name="Id" Mode="In" Type="Int32" />
+    </FunctionImport>
+    <FunctionImport Name="sp_DeleteCoreCompetency">
+      <Parameter Name="Id" Mode="In" Type="Int32" />
+    </FunctionImport>
+    <FunctionImport Name="sp_DeleteDepartment">
+      <Parameter Name="Id" Mode="In" Type="Int32" />
+    </FunctionImport>
+    <FunctionImport Name="sp_DeleteDesignation">
+      <Parameter Name="Id" Mode="In" Type="Int32" />
+    </FunctionImport>
+    <FunctionImport Name="sp_DeleteEmployees">
+      <Parameter Name="Id" Mode="In" Type="Int32" />
+    </FunctionImport>
+    <FunctionImport Name="sp_dropdiagram">
+      <Parameter Name="diagramname" Mode="In" Type="String" />
+      <Parameter Name="owner_id" Mode="In" Type="Int32" />
+    </FunctionImport>
+    <FunctionImport Name="sp_EditAccounts">
+      <Parameter Name="Id" Mode="In" Type="Int32" />
+      <Parameter Name="Username" Mode="In" Type="String" />
+      <Parameter Name="Password" Mode="In" Type="String" />
+      <Parameter Name="Email" Mode="In" Type="String" />
+    </FunctionImport>
+    <FunctionImport Name="sp_EditCompetencyCat">
+      <Parameter Name="Id" Mode="In" Type="Int32" />
+      <Parameter Name="Name" Mode="In" Type="String" />
+      <Parameter Name="WeightedScore" Mode="In" Type="Int32" />
+    </FunctionImport>
+    <FunctionImport Name="sp_EditCoreCompetency">
+      <Parameter Name="Id" Mode="In" Type="Int32" />
+      <Parameter Name="Name" Mode="In" Type="String" />
+      <Parameter Name="QuestionString" Mode="In" Type="String" />
+      <Parameter Name="Weight" Mode="In" Type="Int32" />
+    </FunctionImport>
+    <FunctionImport Name="sp_EditDepartment">
+      <Parameter Name="Id" Mode="In" Type="Int32" />
+      <Parameter Name="Name" Mode="In" Type="String" />
+    </FunctionImport>
+    <FunctionImport Name="sp_EditDesignation">
+      <Parameter Name="Id" Mode="In" Type="Int32" />
+      <Parameter Name="Name" Mode="In" Type="String" />
+    </FunctionImport>
+    <FunctionImport Name="sp_EditEmployees">
+      <Parameter Name="Id" Mode="In" Type="Int32" />
+      <Parameter Name="FirstName" Mode="In" Type="String" />
+      <Parameter Name="LastName" Mode="In" Type="String" />
+      <Parameter Name="DepartmentId" Mode="In" Type="Int32" />
+      <Parameter Name="DesignationId" Mode="In" Type="Int32" />
+    </FunctionImport>
+    <FunctionImport Name="sp_GetEmployeeDetail" ReturnType="Collection(EmployeeEvaluationModel.sp_GetEmployeeDetail_Result)">
+      <Parameter Name="Id" Mode="In" Type="Int32" />
+    </FunctionImport>
+    <FunctionImport Name="sp_GetSumCat" ReturnType="Collection(Int32)" />
+    <FunctionImport Name="sp_GetSumCompetency" ReturnType="Collection(Int32)">
+      <Parameter Name="Id" Mode="In" Type="Int32" />
+    </FunctionImport>
+    <FunctionImport Name="sp_helpdiagramdefinition" ReturnType="Collection(EmployeeEvaluationModel.sp_helpdiagramdefinition_Result)">
+      <Parameter Name="diagramname" Mode="In" Type="String" />
+      <Parameter Name="owner_id" Mode="In" Type="Int32" />
+    </FunctionImport>
+    <FunctionImport Name="sp_helpdiagrams" ReturnType="Collection(EmployeeEvaluationModel.sp_helpdiagrams_Result)">
+      <Parameter Name="diagramname" Mode="In" Type="String" />
+      <Parameter Name="owner_id" Mode="In" Type="Int32" />
+    </FunctionImport>
+    <FunctionImport Name="sp_renamediagram">
+      <Parameter Name="diagramname" Mode="In" Type="String" />
+      <Parameter Name="owner_id" Mode="In" Type="Int32" />
+      <Parameter Name="new_diagramname" Mode="In" Type="String" />
+    </FunctionImport>
+    <FunctionImport Name="sp_SearchAccounts" ReturnType="Collection(EmployeeEvaluationModel.sp_SearchAccounts_Result)">
+      <Parameter Name="Search" Mode="In" Type="String" />
+    </FunctionImport>
+    <FunctionImport Name="sp_SearchCompetencyCat" ReturnType="Collection(EmployeeEvaluationModel.sp_SearchCompetencyCat_Result)">
+      <Parameter Name="Search" Mode="In" Type="String" />
+    </FunctionImport>
+    <FunctionImport Name="sp_SearchCoreCompetency" ReturnType="Collection(EmployeeEvaluationModel.sp_SearchCoreCompetency_Result)">
+      <Parameter Name="Search" Mode="In" Type="String" />
+      <Parameter Name="CatId" Mode="In" Type="Int32" />
+    </FunctionImport>
+    <FunctionImport Name="sp_SearchDepartment" ReturnType="Collection(EmployeeEvaluationModel.sp_SearchDepartment_Result)">
+      <Parameter Name="Search" Mode="In" Type="String" />
+    </FunctionImport>
+    <FunctionImport Name="sp_SearchDesignation" ReturnType="Collection(EmployeeEvaluationModel.sp_SearchDesignation_Result)">
+      <Parameter Name="Search" Mode="In" Type="String" />
+    </FunctionImport>
+    <FunctionImport Name="sp_SearchEmployees" ReturnType="Collection(EmployeeEvaluationModel.sp_SearchEmployees_Result)">
+      <Parameter Name="Search" Mode="In" Type="String" />
+    </FunctionImport>
+    <FunctionImport Name="sp_SearchQuarters" ReturnType="Collection(EmployeeEvaluationModel.sp_SearchQuarters_Result)">
+      <Parameter Name="Search" Mode="In" Type="String" />
+      <Parameter Name="Year" Mode="In" Type="Int32" />
+      <Parameter Name="Quarter" Mode="In" Type="Int32" />
+    </FunctionImport>
+    <FunctionImport Name="sp_upgraddiagrams" />
+  </EntityContainer>
+  <ComplexType Name="sp_GetEmployeeDetail_Result">
+    <Property Type="Int32" Name="Id" Nullable="false" />
+    <Property Type="String" Name="FirstName" Nullable="true" MaxLength="50" />
+    <Property Type="String" Name="LastName" Nullable="true" MaxLength="50" />
+    <Property Type="Int32" Name="DesignationId" Nullable="true" />
+    <Property Type="Int32" Name="DepartmentId" Nullable="true" />
+    <Property Type="Boolean" Name="isDeleted" Nullable="true" />
+    <Property Type="String" Name="Department" Nullable="true" MaxLength="50" />
+    <Property Type="String" Name="Designation" Nullable="true" MaxLength="50" />
+  </ComplexType>
+  <ComplexType Name="sp_helpdiagramdefinition_Result">
+    <Property Type="Int32" Name="version" Nullable="true" />
+    <Property Type="Binary" Name="definition" Nullable="true" />
+  </ComplexType>
+  <ComplexType Name="sp_helpdiagrams_Result">
+    <Property Type="String" Name="Database" Nullable="true" MaxLength="128" />
+    <Property Type="String" Name="Name" Nullable="false" MaxLength="128" />
+    <Property Type="Int32" Name="ID" Nullable="false" />
+    <Property Type="String" Name="Owner" Nullable="true" MaxLength="128" />
+    <Property Type="Int32" Name="OwnerID" Nullable="false" />
+  </ComplexType>
+  <ComplexType Name="sp_SearchAccounts_Result">
+    <Property Type="Int32" Name="ID" Nullable="false" />
+    <Property Type="String" Name="Username" Nullable="true" MaxLength="50" />
+    <Property Type="String" Name="Password" Nullable="true" MaxLength="50" />
+    <Property Type="String" Name="Email" Nullable="true" MaxLength="50" />
+    <Property Type="Boolean" Name="isDeleted" Nullable="true" />
+  </ComplexType>
+  <ComplexType Name="sp_SearchCompetencyCat_Result">
+    <Property Type="Int32" Name="Id" Nullable="false" />
+    <Property Type="String" Name="Name" Nullable="true" MaxLength="50" />
+    <Property Type="Int32" Name="WeightedScore" Nullable="true" />
+    <Property Type="Boolean" Name="isDeleted" Nullable="true" />
+  </ComplexType>
+  <ComplexType Name="sp_SearchCoreCompetency_Result">
+    <Property Type="Int32" Name="Id" Nullable="false" />
+    <Property Type="String" Name="Name" Nullable="true" MaxLength="50" />
+    <Property Type="String" Name="QuestionString" Nullable="true" />
+    <Property Type="Int32" Name="Weight" Nullable="true" />
+    <Property Type="Int32" Name="CompetencyCatId" Nullable="true" />
+    <Property Type="Boolean" Name="isDeleted" Nullable="true" />
+  </ComplexType>
+  <ComplexType Name="sp_SearchDepartment_Result">
+    <Property Type="Int32" Name="Id" Nullable="false" />
+    <Property Type="String" Name="Name" Nullable="true" MaxLength="50" />
+    <Property Type="Boolean" Name="isDeleted" Nullable="true" />
+  </ComplexType>
+  <ComplexType Name="sp_SearchDesignation_Result">
+    <Property Type="Int32" Name="Id" Nullable="false" />
+    <Property Type="String" Name="Name" Nullable="true" MaxLength="50" />
+    <Property Type="Boolean" Name="isDeleted" Nullable="true" />
+  </ComplexType>
+  <ComplexType Name="sp_SearchEmployees_Result">
+    <Property Type="Int32" Name="Id" Nullable="false" />
+    <Property Type="String" Name="FirstName" Nullable="true" MaxLength="50" />
+    <Property Type="String" Name="LastName" Nullable="true" MaxLength="50" />
+    <Property Type="Int32" Name="DesignationId" Nullable="true" />
+    <Property Type="Int32" Name="DepartmentId" Nullable="true" />
+    <Property Type="Boolean" Name="isDeleted" Nullable="true" />
+    <Property Type="String" Name="Department" Nullable="true" MaxLength="50" />
+    <Property Type="String" Name="Designation" Nullable="true" MaxLength="50" />
+  </ComplexType>
+  <ComplexType Name="sp_SearchQuarters_Result">
+    <Property Type="Int32" Name="Id" Nullable="false" />
+    <Property Type="String" Name="FirstName" Nullable="true" MaxLength="50" />
+    <Property Type="String" Name="LastName" Nullable="true" MaxLength="50" />
+    <Property Type="Int32" Name="DesignationId" Nullable="true" />
+    <Property Type="Int32" Name="DepartmentId" Nullable="true" />
+    <Property Type="Boolean" Name="isDeleted" Nullable="true" />
+    <Property Type="String" Name="Department" Nullable="true" MaxLength="50" />
+    <Property Type="String" Name="Designation" Nullable="true" MaxLength="50" />
+    <Property Type="Int32" Name="isEvaluated" Nullable="false" />
+    <Property Type="Int32" Name="isConfirmed" Nullable="false" />
+  </ComplexType>
+</Schema>

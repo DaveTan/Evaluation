@@ -1,0 +1,207 @@
+﻿@{
+    ViewBag.Title = "EvaluationForm";
+    using (var ctx = new Evaluation.WebMVC.Models.EmployeeEvaluationEntities())
+    {
+        var resultset = ctx.sp_GetEmployeeDetail(Convert.ToInt32(Session["EvalId"])).ToArray()[0];
+        ViewBag.EmployeeData = resultset;
+        var rs = ctx.sp_GetHeader(Convert.ToInt32(Session["EvalId"]), Convert.ToInt32(Session["Year"]), Convert.ToInt32(Session["Quarter"])).ToList();
+        ViewBag.Evaluator = Session["Username"];
+        foreach (var c in rs)
+        {
+            ViewBag.Evaluator = c.Username;
+        }
+    }
+}
+
+<div id="FormContent">
+    <table class="table table-condensed">
+        <thead>
+            <tr>
+                <th>
+                    <h2>@ViewBag.Title</h2>
+                </th>
+            </tr>
+        </thead>
+    </table>
+
+    <form action="" method="post" enctype="multipart/form-data">
+        <input type="hidden" name="Quarter" value="@Session["Quarter"]" />
+        <input type="hidden" name="Year" value="@Session["Year"]" />
+        <input type="hidden" name="EmployeeId" value="@Session["EvalId"]" />
+        <table class="table table-bordered">
+            <tbody>
+                <tr>
+                    <td class="col-sm-2">
+                        <strong>Year</strong>
+                    </td>
+                    <td>@Session["Year"]</td>
+                    <td class="col-sm-2">
+                        <strong>Quarter</strong>
+                    </td>
+                    <td>@Session["Quarter"]</td>
+                </tr>
+                <tr>
+                    <td class="col-sm-2">
+                        <strong>First Name</strong>
+                    </td>
+                    <td>@ViewBag.EmployeeData.FirstName</td>
+                    <td class="col-sm-2">
+                        <strong>Last Name</strong>
+                    </td>
+                    <td>@ViewBag.EmployeeData.LastName</td>
+                </tr>
+                <tr>
+                    <td class="col-sm-2">
+                        <strong>Designation</strong>
+                    </td>
+                    <td>@ViewBag.EmployeeData.Department</td>
+                    <td class="col-sm-2">
+                        <strong>Department</strong>
+                    </td>
+                    <td>@ViewBag.EmployeeData.Designation</td>
+                </tr>
+                <tr>
+                    <td class="col-sm-2">
+                        <strong>Evaluator</strong>
+                    </td>
+                    <td class="col-sm-2">
+                        @ViewBag.Evaluator
+                    </td>
+                    <td class="col-sm-2"></td>
+                    <td class="col-sm-2"></td>
+                </tr>
+            </tbody>
+        </table>
+        @{
+            double gwa = 0;
+            using (var ctx = new Evaluation.WebMVC.Models.EmployeeEvaluationEntities())
+            {
+                var ResultCat = ctx.sp_SearchCompetencyCat("");
+                foreach (var c in ResultCat)
+                {
+                    double totalCat = 0;
+                    @Html.Raw(@"
+                    <table class='table table-bordered' id='"+c.Id+ @"'>
+                        <thead>
+                            <tr>
+
+                                <td class='col-md-9'><strong>Description</strong></td>
+                                <td class='col-md-1'><strong>Score</strong></td>
+                                <td class='col-md-1'><strong>Weight</strong></td>
+                                <td class='col-md-'><strong>Weighted Score</strong></td>
+                            </tr>
+                            <tr>
+                                <td colspan='3' ><strong>" + c.Name + @"</strong></td>
+                                <td id='mainWeight "+c.Id+@"'>" + c.WeightedScore + @"%</td>
+                            </tr>
+                        </thead>
+                        </tbody>
+                    ");
+                      var ResultRec = ctx.sp_getForm(c.Id, Convert.ToInt32(Session["Year"]), Convert.ToInt32(Session["Quarter"]), Convert.ToInt32(Session["EvalId"]));
+                      foreach (var k in ResultRec)
+                      {
+                          string list = string.Format("<select name='Score{0}' id='Score{0}' onChange='updateScore({1})' class='form-control'>", k.Id, c.Id);
+                          for (int a = 4; a >= 1; a--)
+                          {
+                              if (Convert.ToInt32(k.itemScore) == a)
+                              {
+                                  list += string.Format("<option value= '{0}' selected>{0}</>", a);
+                              }
+                              else
+                              {
+                                  list += string.Format("<option value= '{0}'>{0}</>", a);
+                              }
+                          }
+                          list += "</select>";
+                          @Html.Raw(string.Format("<input type='hidden' name='Cat{1}', value='{0}'>", k.Id, k.Id));
+                          double weightedScore = Convert.ToInt32(k.itemScore) * (Convert.ToInt32(k.Weight) * 0.01);
+                          if (weightedScore == 0) { weightedScore = 4 * (Convert.ToInt32(k.Weight) * 0.01); }
+                        @Html.Raw(@"
+                            <tr>
+                                " + string.Format("<td><strong><u>{0}</u></strong><br>{1}</td>", k.Name, k.QuestionString.Replace(System.Environment.NewLine, "<br/>")) + @"
+                                <td>" + list + @"</td>
+                                <td>" + string.Format("<p id='Weight{0}' name = 'Weight{0}'>{1}%</p>", k.Id, k.Weight)+@"</td>
+                                <td>" +string.Format("<h5 id='Final{0}' name = 'Final{0}'>{1}</h5>", k.Id,weightedScore) +@"</td>
+                            </tr>
+                        ");
+                          totalCat += weightedScore;
+                      }
+                      gwa += totalCat * (Convert.ToDouble(c.WeightedScore) * 0.01);
+                    @Html.Raw(@"
+                        <tr>
+                            <td colspan = '3'><strong>Total:</strong></td>
+                            <td><p id='total"+c.Id+@"'>" + totalCat + @"</td>
+                        </tr>
+                        </tbody>
+                        </table>
+                    ");
+                }
+                var rs = ctx.sp_GetHeader(Convert.ToInt32(Session["EvalId"]), Convert.ToInt32(Session["Year"]), Convert.ToInt32(Session["Quarter"])).ToList();
+                foreach (var c in rs)
+                {
+                    ViewBag.Comment = c.Comment;
+                    ViewBag.Improve = c.AreaToImprove;
+                }
+                ViewBag.GWA = gwa;
+            }
+        }
+</div>
+
+<div style="border:1px solid">
+    <h5 style='float:left;margin-left:10px;margin-right:10px'><strong>GWA:</strong></h5>
+    <h5 style='float:right;margin-left:10px;margin-right:10px'><strong><p id='GWA'>@ViewBag.GWA</p></strong></h5>
+    <br />
+    <br />
+</div>
+<br/>
+<label for="Improve">Areas to Improve</label>
+<textarea class="form-control" id="Improve" name="Improve" rows="2">@ViewBag.Improve</textarea>
+
+<label for="Comments">Comments</label>
+<textarea class="form-control" id="Comments" name="Comments" rows="5">@ViewBag.Comment</textarea>
+
+<button type="submit" class="btn btn-default" name="Draft" value="Draft">Save As Draft</button>
+<button type="submit" class="btn btn-default" name="Finalize" value="Finalize">Finalize</button>
+</form>
+<script>
+    function updateScore(element) {
+        console.log(document);
+        var table = document.getElementById(element);
+        var Scores = idsLikeTable("Score", table);
+        var Multipliers = idsLikeTable("Weight", table);
+        var Outputs = idsLikeTable("Final", table);
+        var tableTotal = 0;
+        var ids = idsLike("total");
+        for (var a = 0; a < Scores.length; a++) {
+            var currVal = (parseInt(document.getElementById(Scores[a]).value) * (parseFloat(document.getElementById(Multipliers[a]).innerHTML.replace("%", "")) * 0.01)).toFixed(1);
+            document.getElementById(Outputs[a]).innerHTML = currVal;
+            tableTotal += parseFloat(currVal);
+        }
+        document.getElementById(idsLikeTable("total", table)[0]).innerHTML = tableTotal.toFixed(2);
+        var weights = idsLike("mainWeight");
+        var gwa = 0;
+        for (var a = 0; a < ids.length; a++) {
+            console.log(parseFloat(document.getElementById(weights[a]).innerHTML.replace("%", "")) * 0.01);
+            gwa += parseFloat(document.getElementById(ids[a]).innerHTML) * parseFloat(document.getElementById(weights[a]).innerHTML.replace("%", ""))*0.01;
+        }
+        document.getElementById('GWA').innerHTML = gwa.toFixed(2);
+    }
+    function idsLikeTable(str, data) {
+        var nodes = data.getElementsByTagName('*'),
+        L = nodes.length, A = [], temp;
+        while (L) {
+            temp = nodes[--L].id || '';
+            if (temp.indexOf(str) == 0) A.push(temp);
+        }
+        return A;
+    }
+    function idsLike(str) {
+        var nodes = document.body.getElementsByTagName('*'),
+        L = nodes.length, A = [], temp;
+        while (L) {
+            temp = nodes[--L].id || '';
+            if (temp.indexOf(str) == 0) A.push(temp);
+        }
+        return A;
+    }
+</script>

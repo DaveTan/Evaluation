@@ -1,0 +1,116 @@
+﻿@{
+    if (Convert.ToInt32(Session["userId"]) <= 0)
+    {
+        Response.Redirect(Url.Action("Index", "Login"));
+    }
+}
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Employee Evaluation - @ViewBag.Title</title>
+    <link href="~/Content/Site.css" rel="stylesheet" type="text/css" />
+    <link href="~/Content/bootstrap.min.css" rel="stylesheet" type="text/css" />
+    <link href="~/Content/simple-sidebar.css" rel="stylesheet" />
+    <link href="~/Content/bootstrap-table.min.css" rel="stylesheet" />
+    <script src="~/Scripts/modernizr-2.6.2.js"></script>
+    <script src="~/amcharts/amcharts.js"></script>
+    <script src="~/amcharts/serial.js"></script>
+    <script src="~/Scripts/jquery-2.2.3.min.js"></script>
+    <script src="~/Scripts/bootstrap.min.js"></script>
+</head>
+<body>
+    <div id="wrapper">
+        <div id="sidebar-wrapper" style="background-color: #5196CE">
+            <ul class="sidebar-nav">
+                <li>
+                    <img border="0" alt="NMI-Logo" src="~/logo.png" style="width:200px;margin-left:-15px;margin-top:10px"/>
+                </li>
+                <li class="sidebar-brand">
+                    <a href="~/Home/Evaluation" style="color:white">
+                        Quarterly PMS
+                    </a>
+                </li>
+                <li>
+                    <a href="~/Home/Evaluation" style="color:white">Evaluation</a>
+                </li>
+                <li>
+                    <a data-toggle="collapse" href="#collapse1" style="color:white">Settings</a>
+                    <div id="collapse1" class="panel-collapse collapse">
+                        <ul class="list-group">
+                            <li>
+                                <a href="~/Home/Competencies" style="color:white"><p style="margin-left:20px;font-size:12px">Competencies</p></a>
+                            </li>
+                            <li>
+                                <a href="~/Home/Departments" style="color:white"><p style="margin-left:20px;font-size:12px">Departments</p></a>
+                            </li>
+                            <li>
+                                <a href="~/Home/Designations" style="color:white"><p style="margin-left:20px;font-size:12px">Designations</p></a>
+                            </li>
+                            <li>
+                                <a href="~/Home/Employees" style="color:white"><p style="margin-left:20px;font-size:12px">Employees</p></a>
+                            </li>
+                            <li>
+                                <a href="~/Home/Accounts" style="color:white"><p style="margin-left:20px;font-size:12px">Accounts</p></a>
+                            </li>
+                        </ul>
+                    </div>
+                </li>
+            </ul>
+            <div style="height:170px;bottom:0px;position:absolute;width:inherit">
+                <ul class="sidebar-nav">
+                    <li>
+                        <a href="@Url.Action("Index","Login")" style="color:white">Logout</a>
+                    </li>
+                </ul>
+                    <div style="text-align:center;font-size:12px">
+                        <br/><br/><hr><p>NM Network Manager Sales Inc.</p>
+                        <p>Development/QA Team@2016</p>
+                        <p>dev@nmiph.com/qa@nmiph.com</p>
+                    </div>
+</div>
+        </div>
+        <div id="page-content-wrapper">
+            <div class="container-fluid">
+                <div class="row">
+                    <div class="col-lg-12">
+                        @RenderBody()
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <script>
+        $("#menu-toggle").click(function (e) {
+            e.preventDefault();
+            $("#wrapper").toggleClass("toggled");
+        });
+        function checkTextField(field) {
+            var Id = $('#' + field.id);
+            if (field.value == '') {
+                Id.css("border-color", "red");
+            }
+            else {
+                Id.css("border-color", "#cccccc");
+            }
+        }
+        function checkTextField2(field, field2) {
+            var Id = $('#' + field.id);
+            if (field.value == '' || (field.value != field2.value)) {
+                Id.css("border-color", "red");
+            }
+            else {
+                Id.css("border-color", "#cccccc");
+            }
+        }
+        String.prototype.format = function () {
+            var args = arguments;
+            return this.replace(/\{\{|\}\}|\{(\d+)\}/g, function (curlyBrack, index) {
+                return ((curlyBrack == "{{") ? "{" : ((curlyBrack == "}}") ? "}" : args[index]));
+            });
+        };
+    </script>
+    <script src="~/Scripts/bootstrap-table/bootstrap-table.min.js"></script>
+</body>
+</html>

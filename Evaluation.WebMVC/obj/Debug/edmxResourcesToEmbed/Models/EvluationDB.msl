@@ -1,0 +1,229 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Mapping Space="C-S" xmlns="http://schemas.microsoft.com/ado/2009/11/mapping/cs">
+  <EntityContainerMapping StorageEntityContainer="EmployeeEvaluationModelStoreContainer" CdmEntityContainer="EmployeeEvaluationEntities">
+    <EntitySetMapping Name="Accounts">
+      <EntityTypeMapping TypeName="EmployeeEvaluationModel.Account">
+        <MappingFragment StoreEntitySet="Accounts">
+          <ScalarProperty Name="ID" ColumnName="ID" />
+          <ScalarProperty Name="Username" ColumnName="Username" />
+          <ScalarProperty Name="Password" ColumnName="Password" />
+          <ScalarProperty Name="Email" ColumnName="Email" />
+          <ScalarProperty Name="isDeleted" ColumnName="isDeleted" />
+        </MappingFragment>
+      </EntityTypeMapping>
+    </EntitySetMapping>
+    <EntitySetMapping Name="CompetencyCats">
+      <EntityTypeMapping TypeName="EmployeeEvaluationModel.CompetencyCat">
+        <MappingFragment StoreEntitySet="CompetencyCat">
+          <ScalarProperty Name="Id" ColumnName="Id" />
+          <ScalarProperty Name="Name" ColumnName="Name" />
+          <ScalarProperty Name="WeightedScore" ColumnName="WeightedScore" />
+          <ScalarProperty Name="isDeleted" ColumnName="isDeleted" />
+        </MappingFragment>
+      </EntityTypeMapping>
+    </EntitySetMapping>
+    <EntitySetMapping Name="CoreCompetencies">
+      <EntityTypeMapping TypeName="EmployeeEvaluationModel.CoreCompetency">
+        <MappingFragment StoreEntitySet="CoreCompetency">
+          <ScalarProperty Name="Id" ColumnName="Id" />
+          <ScalarProperty Name="Name" ColumnName="Name" />
+          <ScalarProperty Name="QuestionString" ColumnName="QuestionString" />
+          <ScalarProperty Name="Weight" ColumnName="Weight" />
+          <ScalarProperty Name="CompetencyCatId" ColumnName="CompetencyCatId" />
+          <ScalarProperty Name="isDeleted" ColumnName="isDeleted" />
+        </MappingFragment>
+      </EntityTypeMapping>
+    </EntitySetMapping>
+    <EntitySetMapping Name="Departments">
+      <EntityTypeMapping TypeName="EmployeeEvaluationModel.Department">
+        <MappingFragment StoreEntitySet="Department">
+          <ScalarProperty Name="Id" ColumnName="Id" />
+          <ScalarProperty Name="Name" ColumnName="Name" />
+          <ScalarProperty Name="isDeleted" ColumnName="isDeleted" />
+        </MappingFragment>
+      </EntityTypeMapping>
+    </EntitySetMapping>
+    <EntitySetMapping Name="Designations">
+      <EntityTypeMapping TypeName="EmployeeEvaluationModel.Designation">
+        <MappingFragment StoreEntitySet="Designation">
+          <ScalarProperty Name="Id" ColumnName="Id" />
+          <ScalarProperty Name="Name" ColumnName="Name" />
+          <ScalarProperty Name="isDeleted" ColumnName="isDeleted" />
+        </MappingFragment>
+      </EntityTypeMapping>
+    </EntitySetMapping>
+    <EntitySetMapping Name="Employees">
+      <EntityTypeMapping TypeName="EmployeeEvaluationModel.Employee">
+        <MappingFragment StoreEntitySet="Employees">
+          <ScalarProperty Name="Id" ColumnName="Id" />
+          <ScalarProperty Name="FirstName" ColumnName="FirstName" />
+          <ScalarProperty Name="LastName" ColumnName="LastName" />
+          <ScalarProperty Name="DesignationId" ColumnName="DesignationId" />
+          <ScalarProperty Name="DepartmentId" ColumnName="DepartmentId" />
+          <ScalarProperty Name="isDeleted" ColumnName="isDeleted" />
+        </MappingFragment>
+      </EntityTypeMapping>
+    </EntitySetMapping>
+    <EntitySetMapping Name="EvalHeaders">
+      <EntityTypeMapping TypeName="EmployeeEvaluationModel.EvalHeader">
+        <MappingFragment StoreEntitySet="EvalHeader">
+          <ScalarProperty Name="Id" ColumnName="Id" />
+          <ScalarProperty Name="Quarter" ColumnName="Quarter" />
+          <ScalarProperty Name="Year" ColumnName="Year" />
+          <ScalarProperty Name="EmployeeId" ColumnName="EmployeeId" />
+          <ScalarProperty Name="AccountId" ColumnName="AccountId" />
+          <ScalarProperty Name="isDeleted" ColumnName="isDeleted" />
+          <ScalarProperty Name="isConfirmed" ColumnName="isConfirmed" />
+          <ScalarProperty Name="AreaToImprove" ColumnName="AreaToImprove" />
+          <ScalarProperty Name="Comment" ColumnName="Comment" />
+        </MappingFragment>
+      </EntityTypeMapping>
+    </EntitySetMapping>
+    <EntitySetMapping Name="EvalItems">
+      <EntityTypeMapping TypeName="EmployeeEvaluationModel.EvalItem">
+        <MappingFragment StoreEntitySet="EvalItem">
+          <ScalarProperty Name="Id" ColumnName="Id" />
+          <ScalarProperty Name="CoreCompetencyId" ColumnName="CoreCompetencyId" />
+          <ScalarProperty Name="Score" ColumnName="Score" />
+          <ScalarProperty Name="EvalHeaderId" ColumnName="EvalHeaderId" />
+        </MappingFragment>
+      </EntityTypeMapping>
+    </EntitySetMapping>
+    <EntitySetMapping Name="sysdiagrams">
+      <EntityTypeMapping TypeName="EmployeeEvaluationModel.sysdiagram">
+        <MappingFragment StoreEntitySet="sysdiagrams">
+          <ScalarProperty Name="name" ColumnName="name" />
+          <ScalarProperty Name="principal_id" ColumnName="principal_id" />
+          <ScalarProperty Name="diagram_id" ColumnName="diagram_id" />
+          <ScalarProperty Name="version" ColumnName="version" />
+          <ScalarProperty Name="definition" ColumnName="definition" />
+        </MappingFragment>
+      </EntityTypeMapping>
+    </EntitySetMapping>
+    <FunctionImportMapping FunctionImportName="sp_AddAccounts" FunctionName="EmployeeEvaluationModel.Store.sp_AddAccounts" />
+    <FunctionImportMapping FunctionImportName="sp_AddCompetencyCat" FunctionName="EmployeeEvaluationModel.Store.sp_AddCompetencyCat" />
+    <FunctionImportMapping FunctionImportName="sp_AddCoreCompetency" FunctionName="EmployeeEvaluationModel.Store.sp_AddCoreCompetency" />
+    <FunctionImportMapping FunctionImportName="sp_AddDepartment" FunctionName="EmployeeEvaluationModel.Store.sp_AddDepartment" />
+    <FunctionImportMapping FunctionImportName="sp_AddDesignation" FunctionName="EmployeeEvaluationModel.Store.sp_AddDesignation" />
+    <FunctionImportMapping FunctionImportName="sp_AddEmployees" FunctionName="EmployeeEvaluationModel.Store.sp_AddEmployees" />
+    <FunctionImportMapping FunctionImportName="sp_AddEvalHeader" FunctionName="EmployeeEvaluationModel.Store.sp_AddEvalHeader" />
+    <FunctionImportMapping FunctionImportName="sp_AddEvalItem" FunctionName="EmployeeEvaluationModel.Store.sp_AddEvalItem" />
+    <FunctionImportMapping FunctionImportName="sp_alterdiagram" FunctionName="EmployeeEvaluationModel.Store.sp_alterdiagram" />
+    <FunctionImportMapping FunctionImportName="sp_creatediagram" FunctionName="EmployeeEvaluationModel.Store.sp_creatediagram" />
+    <FunctionImportMapping FunctionImportName="sp_DeleteAccounts" FunctionName="EmployeeEvaluationModel.Store.sp_DeleteAccounts" />
+    <FunctionImportMapping FunctionImportName="sp_DeleteCompetencyCat" FunctionName="EmployeeEvaluationModel.Store.sp_DeleteCompetencyCat" />
+    <FunctionImportMapping FunctionImportName="sp_DeleteCoreCompetency" FunctionName="EmployeeEvaluationModel.Store.sp_DeleteCoreCompetency" />
+    <FunctionImportMapping FunctionImportName="sp_DeleteDepartment" FunctionName="EmployeeEvaluationModel.Store.sp_DeleteDepartment" />
+    <FunctionImportMapping FunctionImportName="sp_DeleteDesignation" FunctionName="EmployeeEvaluationModel.Store.sp_DeleteDesignation" />
+    <FunctionImportMapping FunctionImportName="sp_DeleteEmployees" FunctionName="EmployeeEvaluationModel.Store.sp_DeleteEmployees" />
+    <FunctionImportMapping FunctionImportName="sp_dropdiagram" FunctionName="EmployeeEvaluationModel.Store.sp_dropdiagram" />
+    <FunctionImportMapping FunctionImportName="sp_EditAccounts" FunctionName="EmployeeEvaluationModel.Store.sp_EditAccounts" />
+    <FunctionImportMapping FunctionImportName="sp_EditCompetencyCat" FunctionName="EmployeeEvaluationModel.Store.sp_EditCompetencyCat" />
+    <FunctionImportMapping FunctionImportName="sp_EditCoreCompetency" FunctionName="EmployeeEvaluationModel.Store.sp_EditCoreCompetency" />
+    <FunctionImportMapping FunctionImportName="sp_EditDepartment" FunctionName="EmployeeEvaluationModel.Store.sp_EditDepartment" />
+    <FunctionImportMapping FunctionImportName="sp_EditDesignation" FunctionName="EmployeeEvaluationModel.Store.sp_EditDesignation" />
+    <FunctionImportMapping FunctionImportName="sp_EditEmployees" FunctionName="EmployeeEvaluationModel.Store.sp_EditEmployees" />
+    <FunctionImportMapping FunctionImportName="sp_GetEmployeeDetail" FunctionName="EmployeeEvaluationModel.Store.sp_GetEmployeeDetail">
+      <ResultMapping>
+        <ComplexTypeMapping TypeName="EmployeeEvaluationModel.sp_GetEmployeeDetail_Result">
+          <ScalarProperty Name="Id" ColumnName="Id" />
+          <ScalarProperty Name="FirstName" ColumnName="FirstName" />
+          <ScalarProperty Name="LastName" ColumnName="LastName" />
+          <ScalarProperty Name="DesignationId" ColumnName="DesignationId" />
+          <ScalarProperty Name="DepartmentId" ColumnName="DepartmentId" />
+          <ScalarProperty Name="isDeleted" ColumnName="isDeleted" />
+          <ScalarProperty Name="Department" ColumnName="Department" />
+          <ScalarProperty Name="Designation" ColumnName="Designation" />
+        </ComplexTypeMapping>
+      </ResultMapping>
+    </FunctionImportMapping>
+    <FunctionImportMapping FunctionImportName="sp_GetSumCat" FunctionName="EmployeeEvaluationModel.Store.sp_GetSumCat" />
+    <FunctionImportMapping FunctionImportName="sp_GetSumCompetency" FunctionName="EmployeeEvaluationModel.Store.sp_GetSumCompetency" />
+    <FunctionImportMapping FunctionImportName="sp_helpdiagramdefinition" FunctionName="EmployeeEvaluationModel.Store.sp_helpdiagramdefinition">
+      <ResultMapping>
+        <ComplexTypeMapping TypeName="EmployeeEvaluationModel.sp_helpdiagramdefinition_Result">
+          <ScalarProperty Name="version" ColumnName="version" />
+          <ScalarProperty Name="definition" ColumnName="definition" />
+        </ComplexTypeMapping>
+      </ResultMapping>
+    </FunctionImportMapping>
+    <FunctionImportMapping FunctionImportName="sp_helpdiagrams" FunctionName="EmployeeEvaluationModel.Store.sp_helpdiagrams">
+      <ResultMapping>
+        <ComplexTypeMapping TypeName="EmployeeEvaluationModel.sp_helpdiagrams_Result">
+          <ScalarProperty Name="Database" ColumnName="Database" />
+          <ScalarProperty Name="Name" ColumnName="Name" />
+          <ScalarProperty Name="ID" ColumnName="ID" />
+          <ScalarProperty Name="Owner" ColumnName="Owner" />
+          <ScalarProperty Name="OwnerID" ColumnName="OwnerID" />
+        </ComplexTypeMapping>
+      </ResultMapping>
+    </FunctionImportMapping>
+    <FunctionImportMapping FunctionImportName="sp_renamediagram" FunctionName="EmployeeEvaluationModel.Store.sp_renamediagram" />
+    <FunctionImportMapping FunctionImportName="sp_SearchAccounts" FunctionName="EmployeeEvaluationModel.Store.sp_SearchAccounts">
+      <ResultMapping>
+        <ComplexTypeMapping TypeName="EmployeeEvaluationModel.sp_SearchAccounts_Result">
+          <ScalarProperty Name="ID" ColumnName="ID" />
+          <ScalarProperty Name="Username" ColumnName="Username" />
+          <ScalarProperty Name="Password" ColumnName="Password" />
+          <ScalarProperty Name="Email" ColumnName="Email" />
+          <ScalarProperty Name="isDeleted" ColumnName="isDeleted" />
+        </ComplexTypeMapping>
+      </ResultMapping>
+    </FunctionImportMapping>
+    <FunctionImportMapping FunctionImportName="sp_SearchCompetencyCat" FunctionName="EmployeeEvaluationModel.Store.sp_SearchCompetencyCat">
+      <ResultMapping>
+        <ComplexTypeMapping TypeName="EmployeeEvaluationModel.sp_SearchCompetencyCat_Result">
+          <ScalarProperty Name="Id" ColumnName="Id" />
+          <ScalarProperty Name="Name" ColumnName="Name" />
+          <ScalarProperty Name="WeightedScore" ColumnName="WeightedScore" />
+          <ScalarProperty Name="isDeleted" ColumnName="isDeleted" />
+        </ComplexTypeMapping>
+      </ResultMapping>
+    </FunctionImportMapping>
+    <FunctionImportMapping FunctionImportName="sp_SearchCoreCompetency" FunctionName="EmployeeEvaluationModel.Store.sp_SearchCoreCompetency">
+      <ResultMapping>
+        <ComplexTypeMapping TypeName="EmployeeEvaluationModel.sp_SearchCoreCompetency_Result">
+          <ScalarProperty Name="Id" ColumnName="Id" />
+          <ScalarProperty Name="Name" ColumnName="Name" />
+          <ScalarProperty Name="QuestionString" ColumnName="QuestionString" />
+          <ScalarProperty Name="Weight" ColumnName="Weight" />
+          <ScalarProperty Name="CompetencyCatId" ColumnName="CompetencyCatId" />
+          <ScalarProperty Name="isDeleted" ColumnName="isDeleted" />
+        </ComplexTypeMapping>
+      </ResultMapping>
+    </FunctionImportMapping>
+    <FunctionImportMapping FunctionImportName="sp_SearchDepartment" FunctionName="EmployeeEvaluationModel.Store.sp_SearchDepartment">
+      <ResultMapping>
+        <ComplexTypeMapping TypeName="EmployeeEvaluationModel.sp_SearchDepartment_Result">
+          <ScalarProperty Name="Id" ColumnName="Id" />
+          <ScalarProperty Name="Name" ColumnName="Name" />
+          <ScalarProperty Name="isDeleted" ColumnName="isDeleted" />
+        </ComplexTypeMapping>
+      </ResultMapping>
+    </FunctionImportMapping>
+    <FunctionImportMapping FunctionImportName="sp_SearchDesignation" FunctionName="EmployeeEvaluationModel.Store.sp_SearchDesignation">
+      <ResultMapping>
+        <ComplexTypeMapping TypeName="EmployeeEvaluationModel.sp_SearchDesignation_Result">
+          <ScalarProperty Name="Id" ColumnName="Id" />
+          <ScalarProperty Name="Name" ColumnName="Name" />
+          <ScalarProperty Name="isDeleted" ColumnName="isDeleted" />
+        </ComplexTypeMapping>
+      </ResultMapping>
+    </FunctionImportMapping>
+    <FunctionImportMapping FunctionImportName="sp_SearchEmployees" FunctionName="EmployeeEvaluationModel.Store.sp_SearchEmployees">
+      <ResultMapping>
+        <ComplexTypeMapping TypeName="EmployeeEvaluationModel.sp_SearchEmployees_Result">
+          <ScalarProperty Name="Id" ColumnName="Id" />
+          <ScalarProperty Name="FirstName" ColumnName="FirstName" />
+          <ScalarProperty Name="LastName" ColumnName="LastName" />
+          <ScalarProperty Name="DesignationId" ColumnName="DesignationId" />
+          <ScalarProperty Name="DepartmentId" ColumnName="DepartmentId" />
+          <ScalarProperty Name="isDeleted" ColumnName="isDeleted" />
+          <ScalarProperty Name="Department" ColumnName="Department" />
+          <ScalarProperty Name="Designation" ColumnName="Designation" />
+        </ComplexTypeMapping>
+      </ResultMapping>
+    </FunctionImportMapping>
+    <FunctionImportMapping FunctionImportName="sp_upgraddiagrams" FunctionName="EmployeeEvaluationModel.Store.sp_upgraddiagrams" />
+  </EntityContainerMapping>
+</Mapping>

@@ -1,0 +1,26 @@
+﻿
+@{
+    ViewBag.Title = "Index";
+    Layout = "~/Views/Shared/_LoginLayout.cshtml";
+}
+
+<div id="containerMid">
+    <div style="padding-bottom:30px;padding-left:45px">
+        <img border="0" alt="NMI-Logo" src="~/logo.png" />
+    </div>
+    <div class="panel panel-default">
+        <div class="panel-heading">Login</div>
+        <div class="panel-body">
+            <form action="" method="post" enctype="multipart/form-data">
+                <label for="usr">Username:</label>
+                <input type="text" class="form-control" id="usr" name="username">
+                <label for="pwd">Password:</label>
+                <input type="password" class="form-control" id="pwd" name="password"><br />
+                <div style="float:right">
+                    <button type="submit" class="btn btn-primary" id="Login" name="Login" value="Login">Login</button>
+                    <button type="reset" class="btn btn-primary" name="reset">Clear</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
